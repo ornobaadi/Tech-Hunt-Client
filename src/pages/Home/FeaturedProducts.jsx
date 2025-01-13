@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
 import ProductItem from "../Shared/ProductItem";
+import useProducts from "../../hooks/useProducts";
 
 const FeaturedProducts = () => {
-    const [products, setProducts] = useState([]);
-
-    useEffect(() => {
-        fetch('products.json')
-        .then(res => res.json())
-        .then(data => {
-            const featured = data.filter(item => item.category === "featured");
-            setProducts(featured)})
-    }, [])
+    const [products] = useProducts();
+    const featured = products.filter(products => products.category === 'featured')
 
 
     return (
@@ -20,7 +13,7 @@ const FeaturedProducts = () => {
                 <h2 className="text-2xl lg:text-4xl font-bold text-base-content">Featured Products</h2>
             </div>
             <div className="grid grid-cols-1 gap-6 container mx-auto">
-                {products.map((product) => <ProductItem
+                {featured.map((product) => <ProductItem
                 key={product.id}
                 product={product}
                 ></ProductItem>
