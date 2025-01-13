@@ -13,6 +13,7 @@
             "Assistant"
         ],
         "externalLink": "https://chat.openai.com",
+        "category": "featured",
         "upvotes": 5000,
         "timestamp": "2025-01-13T12:00:00Z"
     },
@@ -47,6 +48,7 @@
             "Collaboration"
         ],
         "externalLink": "https://figma.com",
+        "category": "featured",
         "upvotes": 3500,
         "timestamp": "2025-01-13T14:00:00Z"
     },
@@ -98,6 +100,7 @@
             "Podcasts"
         ],
         "externalLink": "https://spotify.com",
+        "category": "featured",
         "upvotes": 8000,
         "timestamp": "2025-01-13T17:00:00Z"
     },
@@ -217,6 +220,7 @@
             "Version Control"
         ],
         "externalLink": "https://github.com",
+        "category": "featured",
         "upvotes": 8700,
         "timestamp": "2025-01-14T00:00:00Z"
     },
