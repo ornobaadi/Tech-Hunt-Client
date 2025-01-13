@@ -1,0 +1,257 @@
+[
+    {
+        "id": "1",
+        "productName": "ChatGPT",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+        "description": "An AI-powered conversational assistant by OpenAI that can answer questions, write content, and more.",
+        "ownerName": "OpenAI",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/0/02/OpenAI_Logo.svg",
+        "ownerEmail": "info@openai.com",
+        "tags": [
+            "AI",
+            "Chatbot",
+            "Assistant"
+        ],
+        "externalLink": "https://chat.openai.com",
+        "upvotes": 5000,
+        "timestamp": "2025-01-13T12:00:00Z"
+    },
+    {
+        "id": "2",
+        "productName": "Notion",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg",
+        "description": "An all-in-one productivity tool for note-taking, project management, and collaboration.",
+        "ownerName": "Notion Labs Inc.",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg",
+        "ownerEmail": "support@makenotion.com",
+        "tags": [
+            "Productivity",
+            "Collaboration",
+            "Note-taking"
+        ],
+        "externalLink": "https://notion.so",
+        "upvotes": 4000,
+        "timestamp": "2025-01-13T13:00:00Z"
+    },
+    {
+        "id": "3",
+        "productName": "Figma",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg",
+        "description": "A collaborative interface design tool for teams and individuals.",
+        "ownerName": "Figma Inc.",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg",
+        "ownerEmail": "support@figma.com",
+        "tags": [
+            "Design",
+            "UI/UX",
+            "Collaboration"
+        ],
+        "externalLink": "https://figma.com",
+        "upvotes": 3500,
+        "timestamp": "2025-01-13T14:00:00Z"
+    },
+    {
+        "id": "4",
+        "productName": "Slack",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
+        "description": "A messaging platform for teams and organizations to collaborate in real time.",
+        "ownerName": "Slack Technologies",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
+        "ownerEmail": "feedback@slack.com",
+        "tags": [
+            "Messaging",
+            "Collaboration",
+            "Productivity"
+        ],
+        "externalLink": "https://slack.com",
+        "upvotes": 3000,
+        "timestamp": "2025-01-13T15:00:00Z"
+    },
+    {
+        "id": "5",
+        "productName": "Canva",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Canva_Logo.svg",
+        "description": "A user-friendly graphic design tool for creating visuals, presentations, and more.",
+        "ownerName": "Canva Pty Ltd",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Canva_Logo.svg",
+        "ownerEmail": "contact@canva.com",
+        "tags": [
+            "Design",
+            "Graphics",
+            "Presentations"
+        ],
+        "externalLink": "https://canva.com",
+        "upvotes": 4500,
+        "timestamp": "2025-01-13T16:00:00Z"
+    },
+    {
+        "id": "6",
+        "productName": "Spotify",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+        "description": "A music streaming platform offering millions of songs and podcasts.",
+        "ownerName": "Spotify AB",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+        "ownerEmail": "support@spotify.com",
+        "tags": [
+            "Music",
+            "Streaming",
+            "Podcasts"
+        ],
+        "externalLink": "https://spotify.com",
+        "upvotes": 8000,
+        "timestamp": "2025-01-13T17:00:00Z"
+    },
+    {
+        "id": "7",
+        "productName": "Zoom",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Zoom_Communications_Logo.svg",
+        "description": "A platform for virtual meetings, webinars, and video conferencing.",
+        "ownerName": "Zoom Video Communications",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Zoom_Communications_Logo.svg",
+        "ownerEmail": "support@zoom.us",
+        "tags": [
+            "Video",
+            "Conferencing",
+            "Meetings"
+        ],
+        "externalLink": "https://zoom.us",
+        "upvotes": 7000,
+        "timestamp": "2025-01-13T18:00:00Z"
+    },
+    {
+        "id": "8",
+        "productName": "Dropbox",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/4/48/Dropbox_icon.svg",
+        "description": "A cloud storage service for storing and sharing files securely.",
+        "ownerName": "Dropbox Inc.",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/4/48/Dropbox_icon.svg",
+        "ownerEmail": "support@dropbox.com",
+        "tags": [
+            "Cloud",
+            "Storage",
+            "File Sharing"
+        ],
+        "externalLink": "https://dropbox.com",
+        "upvotes": 6000,
+        "timestamp": "2025-01-13T19:00:00Z"
+    },
+    {
+        "id": "9",
+        "productName": "Trello",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+        "description": "A project management tool using boards, lists, and cards to organize tasks.",
+        "ownerName": "Atlassian",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+        "ownerEmail": "info@trello.com",
+        "tags": [
+            "Project Management",
+            "Collaboration",
+            "Tasks"
+        ],
+        "externalLink": "https://trello.com",
+        "upvotes": 4500,
+        "timestamp": "2025-01-13T20:00:00Z"
+    },
+    {
+        "id": "10",
+        "productName": "ZoomInfo",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/5/58/ZoomInfo_Logo.svg",
+        "description": "A sales and marketing intelligence platform to improve customer engagement.",
+        "ownerName": "ZoomInfo Technologies",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/5/58/ZoomInfo_Logo.svg",
+        "ownerEmail": "sales@zoominfo.com",
+        "tags": [
+            "Sales",
+            "Marketing",
+            "Data"
+        ],
+        "externalLink": "https://zoominfo.com",
+        "upvotes": 4800,
+        "timestamp": "2025-01-13T21:00:00Z"
+    },
+    {
+        "id": "11",
+        "productName": "Adobe Photoshop",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Adobe_Photoshop_CC_icon.svg",
+        "description": "A professional image editing and design software used worldwide.",
+        "ownerName": "Adobe Inc.",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Adobe_Photoshop_CC_icon.svg",
+        "ownerEmail": "support@adobe.com",
+        "tags": [
+            "Design",
+            "Image Editing",
+            "Graphics"
+        ],
+        "externalLink": "https://adobe.com/products/photoshop.html",
+        "upvotes": 9000,
+        "timestamp": "2025-01-13T22:00:00Z"
+    },
+    {
+        "id": "12",
+        "productName": "Google Drive",
+        "productImage": "https://storage.googleapis.com/gweb-uniblog-publish-prod/original_images/Google_Drive.png",
+        "description": "A cloud storage platform offering file sharing and synchronization by Google.",
+        "ownerName": "Google LLC",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+        "ownerEmail": "support@google.com",
+        "tags": [
+            "Cloud Storage",
+            "File Sharing",
+            "Backup"
+        ],
+        "externalLink": "https://drive.google.com",
+        "upvotes": 9500,
+        "timestamp": "2025-01-13T23:00:00Z"
+    },
+    {
+        "id": "13",
+        "productName": "GitHub",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
+        "description": "A development platform for hosting and reviewing code, managing projects, and building software.",
+        "ownerName": "Microsoft",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+        "ownerEmail": "support@github.com",
+        "tags": [
+            "Development",
+            "Code Hosting",
+            "Version Control"
+        ],
+        "externalLink": "https://github.com",
+        "upvotes": 8700,
+        "timestamp": "2025-01-14T00:00:00Z"
+    },
+    {
+        "id": "14",
+        "productName": "WordPress",
+        "productImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzAxIzs2yRTPxONA1yBwMZdhkNwlqmIpxFug&s",
+        "description": "A popular content management system for creating websites and blogs.",
+        "ownerName": "WordPress Foundation",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/2/20/WordPress_logo.svg",
+        "ownerEmail": "info@wordpress.org",
+        "tags": [
+            "CMS",
+            "Blogging",
+            "Website"
+        ],
+        "externalLink": "https://wordpress.org",
+        "upvotes": 5000,
+        "timestamp": "2025-01-14T01:00:00Z"
+    },
+    {
+        "id": "15",
+        "productName": "LinkedIn",
+        "productImage": "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
+        "description": "A professional networking platform for career building and job searching.",
+        "ownerName": "LinkedIn Corporation",
+        "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
+        "ownerEmail": "support@linkedin.com",
+        "tags": [
+            "Networking",
+            "Careers",
+            "Jobs"
+        ],
+        "externalLink": "https://linkedin.com",
+        "upvotes": 8000,
+        "timestamp": "2025-01-14T02:00:00Z"
+    }
+]
