@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom";
 import banner from "../../assets/banner.jpg";
 
 const Banner = () => {
     return (
         <div>
             <div
-                className="hero min-h-[600px] rounded-xl my-2"
+                className="hero min-h-[700px] rounded-xl my-2"
                 style={{
                     backgroundImage: `url(${banner})`,
                     backgroundSize: "cover",
@@ -20,7 +21,7 @@ const Banner = () => {
                         <p className="mb-5">
                             Explore trending innovations, upvote your favorites, and connect with creators driving the future of technology.
                         </p>
-                        <button className="btn btn-primary">Start Exploring</button>
+                        <Link to="/products" className="btn btn-primary">Start Exploring</Link>
                     </div>
                 </div>
             </div>

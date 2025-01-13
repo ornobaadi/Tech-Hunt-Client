@@ -2,7 +2,7 @@ import { FaFacebookSquare, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="footer sm:footer-horizontal footer-center bg-neutral text-primary-content p-5">
+        <footer className="footer sm:footer-horizontal footer-center bg-base-200 p-5">
             <aside>
                 <img className="w-32" src="/logo 2.png" alt="" />
                 <p className="font-bold text-xl">

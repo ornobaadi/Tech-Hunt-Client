@@ -72,7 +72,7 @@
     {
         "id": "5",
         "productName": "Canva",
-        "productImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Canva_Logo.svg",
+        "productImage": "https://images-eds-ssl.xboxlive.com/image?url=4rt9.lXDC4H_93laV1_eHHFT949fUipzkiFOBH3fAiZZUCdYojwUyX2aTonS1aIwMrx6NUIsHfUHSLzjGJFxxo4K81Ei7WzcnqEk8W.MgwadpHjl76SlQnWKc4OkaILTy7aDmpraBC2vB.Q_eb6EavJPyLEBEEqc.BSkZzu5Vng-&format=source",
         "description": "A user-friendly graphic design tool for creating visuals, presentations, and more.",
         "ownerName": "Canva Pty Ltd",
         "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Canva_Logo.svg",
@@ -124,7 +124,7 @@
     {
         "id": "8",
         "productName": "Dropbox",
-        "productImage": "https://upload.wikimedia.org/wikipedia/commons/4/48/Dropbox_icon.svg",
+        "productImage": "https://yt3.googleusercontent.com/pz9t78GdesHdf-KtYqoXVWLNlYApCZxTKxH6a5P76kYbdkWyukPPVAswDeqkiaAhxWPA5CHueQ=s900-c-k-c0x00ffffff-no-rj",
         "description": "A cloud storage service for storing and sharing files securely.",
         "ownerName": "Dropbox Inc.",
         "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/4/48/Dropbox_icon.svg",
@@ -141,7 +141,7 @@
     {
         "id": "9",
         "productName": "Trello",
-        "productImage": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+        "productImage": "https://pbs.twimg.com/profile_images/1361722806694785027/UY7DlO0a_400x400.png",
         "description": "A project management tool using boards, lists, and cards to organize tasks.",
         "ownerName": "Atlassian",
         "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
@@ -158,7 +158,7 @@
     {
         "id": "10",
         "productName": "ZoomInfo",
-        "productImage": "https://upload.wikimedia.org/wikipedia/commons/5/58/ZoomInfo_Logo.svg",
+        "productImage": "https://play-lh.googleusercontent.com/nPQuGIc13eDj3comF4x2ZtPQ91tTgY20Bt3HkM5ZVEf3FiKlZx9n_m_hmLFVjrtQ8w",
         "description": "A sales and marketing intelligence platform to improve customer engagement.",
         "ownerName": "ZoomInfo Technologies",
         "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/5/58/ZoomInfo_Logo.svg",
@@ -209,7 +209,7 @@
     {
         "id": "13",
         "productName": "GitHub",
-        "productImage": "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
+        "productImage": "https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_960_720.png",
         "description": "A development platform for hosting and reviewing code, managing projects, and building software.",
         "ownerName": "Microsoft",
         "ownerImage": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
