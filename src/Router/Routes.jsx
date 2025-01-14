@@ -7,6 +7,8 @@ import Products from "../pages/Products/Products";
 import Login from "../pages/Login/Login";
 import Error from "../components/Error/Error";
 import SignUp from "../pages/SignUp/SignUp";
+import ProductDetails from "../pages/ProductDetails/ProductDetails";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
     {
@@ -29,6 +31,12 @@ export const router = createBrowserRouter([
             {
                 path: 'signup',
                 element: <SignUp></SignUp>,
+            },
+            {
+                path: 'productdetails',
+                element: <PrivateRoute>
+                    <ProductDetails></ProductDetails>
+                </PrivateRoute>,
             },
         ]
     },

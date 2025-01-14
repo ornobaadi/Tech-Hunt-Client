@@ -1,10 +1,19 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const Navbar = () => {
-    const [theme, setTheme] = useState("light");
     const { user, logOut } = useContext(AuthContext);
+    const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    }, [theme]);
+
+    const handleThemeChange = () => {
+        setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    };
 
     const handleLogOut = () => {
         logOut()
@@ -20,9 +29,9 @@ const Navbar = () => {
             <li><NavLink to="/products" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
             }>Products</NavLink></li>
-            <li><NavLink to="/login" className={({ isActive }) =>
+            <li><NavLink to="/productdetails" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
-            }>Login</NavLink></li>
+            }>ProductDetails</NavLink></li>
 
             {/* <li>
                 <details>
@@ -35,11 +44,7 @@ const Navbar = () => {
             </li> */}
         </>
 
-    const handleThemeChange = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
-        setTheme(newTheme);
-        document.documentElement.setAttribute("data-theme", newTheme);
-    };
+    
 
     return (
         <div className="navbar sticky top-0 z-50 bg-base-200 shadow-sm">

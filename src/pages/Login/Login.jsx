@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -11,6 +11,10 @@ const MySwal = withReactContent(Swal);
 const Login = () => {
     const { signIn } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -30,12 +34,12 @@ const Login = () => {
                     timer: 3000,
                     timerProgressBar: true,
                 });
+                navigate(from, {replace: true});
                 console.log(user);
             })
             .catch((error) => {
                 let errorMessage = "Failed to login. Please try again.";
 
-                // Handle specific Firebase errors
                 if (error.code === "auth/invalid-credential") {
                     errorMessage = "Email or Password incorrect. Please check and try again.";
                 } else if (error.code === "auth/too-many-requests") {

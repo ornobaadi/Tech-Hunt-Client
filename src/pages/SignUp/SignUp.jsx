@@ -60,7 +60,6 @@ const SignUp = () => {
                 .catch((error) => {
                     let errorMessage = "Failed to create account. Please try again.";
                     
-                    // Handle specific Firebase errors
                     if (error.code === "auth/email-already-in-use") {
                         errorMessage = "This email is already in use. Please try another email.";
                     } else if (error.code === "auth/invalid-email") {
