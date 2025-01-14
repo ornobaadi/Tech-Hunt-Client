@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import useUpvote from "../../hooks/useUpvote";
 
 const Navbar = () => {
+    const [upvote]  = useUpvote();
     const { user, logOut } = useContext(AuthContext);
     const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -32,6 +35,7 @@ const Navbar = () => {
             <li><NavLink to="/productdetails" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
             }>ProductDetails</NavLink></li>
+
 
             {/* <li>
                 <details>
@@ -80,6 +84,9 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end gap-5">
+                    <button className="btn">
+                        Upvotes <div className="badge badge-sm badge-secondary">+{upvote.length}</div>
+                    </button>
                 <label className="swap swap-rotate">
                     <input
                         type="checkbox"
@@ -106,26 +113,26 @@ const Navbar = () => {
                     user ?
                         <>
                             <div className="dropdown dropdown-end">
-                        <button tabIndex={0} className="avatar btn btn-ghost btn-circle">
-                            <div className="w-10 rounded-full">
-                                <img
-                                    src={user?.photoURL || "/default-user.png"}
-                                    alt="User Avatar"
-                                />
+                                <button tabIndex={0} className="avatar btn btn-ghost btn-circle">
+                                    <div className="w-10 rounded-full">
+                                        <img
+                                            src={user?.photoURL || "/default-user.png"}
+                                            alt="User Avatar"
+                                        />
+                                    </div>
+                                </button>
+                                <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
+                                    <li className="">
+                                        <p className="cursor-default">{user?.displayName || "User"}</p>
+                                    </li>
+                                    <li>
+                                        <Link to="/dashboard">Dashboard</Link>
+                                    </li>
+                                    <li>
+                                        <button onClick={handleLogOut}>Logout</button>
+                                    </li>
+                                </ul>
                             </div>
-                        </button>
-                        <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
-                            <li className="">
-                                <p className="cursor-default">{user?.displayName || "User"}</p>
-                            </li>
-                            <li>
-                                <Link to="/dashboard">Dashboard</Link>
-                            </li>
-                            <li>
-                                <button onClick={handleLogOut}>Logout</button>
-                            </li>
-                        </ul>
-                    </div>
 
 
 

@@ -4,7 +4,8 @@ import { GrShare } from "react-icons/gr";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useUpvote from "../../hooks/useUpvote";
 
 
 const ProductItem = ({ product }) => {
@@ -14,18 +15,20 @@ const ProductItem = ({ product }) => {
     const { _id, productImage, productName, externalLink, tags, ownerName, description, upvotes } = product;
     const { user } = useAuth();
 
+    const axiosSecure = useAxiosSecure();
+    const [, refetch] = useUpvote();
 
-    const handleUpvote = tech => {
+
+    const handleUpvote = () => {
         if (user && user.email) {
-            // TODO: send upvote to db 
-            console.log(user.email, tech);
+            // send upvote to db 
             const upvoteItem = {
                 productId: _id,
                 email: user.email,
                 productName,
                 productImage,
             }
-            axios.post('http://localhost:5000/upvotes', upvoteItem)
+            axiosSecure.post('/upvotes', upvoteItem)
                 .then(res => {
                     console.log(res.data);
                     if (res.data.insertedId) {
@@ -36,6 +39,8 @@ const ProductItem = ({ product }) => {
                             showConfirmButton: false,
                             timer: 1500
                         });
+                        // refetch the upvote 
+                        refetch();
                     }
                 })
 
@@ -94,7 +99,7 @@ const ProductItem = ({ product }) => {
                 </div>
                 <div className="flex items-center gap-4">
                     <button
-                        onClick={() => handleUpvote(product)}
+                        onClick={handleUpvote}
                         className={`btn btn-success flex items-center gap-2`}>
                         <FaCircleChevronUp />
                         {upvotes}
