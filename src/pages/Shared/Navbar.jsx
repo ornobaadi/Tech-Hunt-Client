@@ -44,7 +44,7 @@ const Navbar = () => {
             </li> */}
         </>
 
-    
+
 
     return (
         <div className="navbar sticky top-0 z-50 bg-base-200 shadow-sm">
@@ -105,7 +105,30 @@ const Navbar = () => {
                 {
                     user ?
                         <>
-                            <button onClick={handleLogOut} className="btn">Logout</button>
+                            <div className="dropdown dropdown-end">
+                        <button tabIndex={0} className="avatar btn btn-ghost btn-circle">
+                            <div className="w-10 rounded-full">
+                                <img
+                                    src={user?.photoURL || "/default-user.png"}
+                                    alt="User Avatar"
+                                />
+                            </div>
+                        </button>
+                        <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
+                            <li>
+                                <p className="cursor-default">{user?.displayName || "User"}</p>
+                            </li>
+                            <li>
+                                <Link to="/dashboard">Dashboard</Link>
+                            </li>
+                            <li>
+                                <button onClick={handleLogOut}>Logout</button>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
                         </> : <>
                             <Link to='/login' className="btn">Login</Link>
                         </>
