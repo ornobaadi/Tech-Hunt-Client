@@ -9,6 +9,8 @@ import Error from "../components/Error/Error";
 import SignUp from "../pages/SignUp/SignUp";
 import ProductDetails from "../pages/ProductDetails/ProductDetails";
 import PrivateRoute from "./PrivateRoute";
+import Dashboard from "../Layout/Dashboard";
+import Upvotes from "../pages/Dashboard/Upvotes";
 
 export const router = createBrowserRouter([
     {
@@ -37,6 +39,16 @@ export const router = createBrowserRouter([
                 element: <PrivateRoute>
                     <ProductDetails></ProductDetails>
                 </PrivateRoute>,
+            },
+        ]
+    },
+    {
+        path: 'dashboard',
+        element: <Dashboard></Dashboard>,
+        children: [
+            {
+                path: 'upvotes',
+                element: <Upvotes></Upvotes>,
             },
         ]
     },
