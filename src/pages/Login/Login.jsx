@@ -3,23 +3,58 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const Login = () => {
     const { signIn } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleLogin = e => {
+    const handleLogin = (e) => {
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password);
+
         signIn(email, password)
-            .then(result => {
+            .then((result) => {
                 const user = result.user;
+                MySwal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login successful!",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
                 console.log(user);
             })
-    }
+            .catch((error) => {
+                let errorMessage = "Failed to login. Please try again.";
+
+                // Handle specific Firebase errors
+                if (error.code === "auth/invalid-credential") {
+                    errorMessage = "Email or Password incorrect. Please check and try again.";
+                } else if (error.code === "auth/too-many-requests") {
+                    errorMessage = "Too many login attempts. Please try again later.";
+                }
+
+                MySwal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: errorMessage,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+
+                console.error(error);
+            });
+    };
 
     return (
         <div>
@@ -41,7 +76,13 @@ const Login = () => {
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="email" name="email" placeholder="email" className="input input-bordered" required />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="email"
+                                    className="input input-bordered"
+                                    required
+                                />
                             </div>
                             <div className="form-control">
                                 <label className="label">
@@ -74,8 +115,11 @@ const Login = () => {
                             </div>
                         </form>
                         <div className="flex justify-center mb-5">
-                            <h2>New here? &nbsp;
-                                <Link className="hover:underline" to='/signup'>Create an Account</Link>
+                            <h2>
+                                New here? &nbsp;
+                                <Link className="hover:underline" to="/signup">
+                                    Create an Account
+                                </Link>
                             </h2>
                         </div>
                     </div>
