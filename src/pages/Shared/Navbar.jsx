@@ -7,11 +7,14 @@ const Navbar = () => {
     const links =
         <>
             <li><NavLink to="/" className={({ isActive }) =>
-                    isActive ? "text-primary font-bold" : "text-base-content"
-                }>Home</NavLink></li>
+                isActive ? "text-primary font-bold" : "text-base-content"
+            }>Home</NavLink></li>
             <li><NavLink to="/products" className={({ isActive }) =>
-                    isActive ? "text-primary font-bold" : "text-base-content"
-                }>Products</NavLink></li>
+                isActive ? "text-primary font-bold" : "text-base-content"
+            }>Products</NavLink></li>
+            <li><NavLink to="/login" className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "text-base-content"
+            }>Login</NavLink></li>
 
             {/* <li>
                 <details>
@@ -64,7 +67,7 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end gap-5">
-            <label className="swap swap-rotate">
+                <label className="swap swap-rotate">
                     <input
                         type="checkbox"
                         checked={theme === "dark"}
