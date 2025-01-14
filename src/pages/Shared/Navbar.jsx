@@ -115,7 +115,7 @@ const Navbar = () => {
                             </div>
                         </button>
                         <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
-                            <li>
+                            <li className="">
                                 <p className="cursor-default">{user?.displayName || "User"}</p>
                             </li>
                             <li>

@@ -1,12 +1,63 @@
 /* eslint-disable react/prop-types */
 import { FaCircleChevronUp } from "react-icons/fa6";
 import { GrShare } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import axios from "axios";
+
 
 const ProductItem = ({ product }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const { productImage, productName, externalLink, tags, ownerName, description, upvotes } = product;
+    const { _id, productImage, productName, externalLink, tags, ownerName, description, upvotes } = product;
+    const { user } = useAuth();
 
+
+    const handleUpvote = tech => {
+        if (user && user.email) {
+            // TODO: send upvote to db 
+            console.log(user.email, tech);
+            const upvoteItem = {
+                productId: _id,
+                email: user.email,
+                productName,
+                productImage,
+            }
+            axios.post('http://localhost:5000/upvotes', upvoteItem)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.insertedId) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: `${productName} upvoted`,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                })
+
+        }
+        else {
+            Swal.fire({
+                title: "Login Required",
+                text: "Please login to upvote this tech!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Login"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // send the user to login page
+                    navigate('/login', { state: { from: location } })
+                }
+            });
+        }
+
+    }
     return (
         <div>
             <div
@@ -43,6 +94,7 @@ const ProductItem = ({ product }) => {
                 </div>
                 <div className="flex items-center gap-4">
                     <button
+                        onClick={() => handleUpvote(product)}
                         className={`btn btn-success flex items-center gap-2`}>
                         <FaCircleChevronUp />
                         {upvotes}
