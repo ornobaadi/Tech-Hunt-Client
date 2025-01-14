@@ -84,9 +84,9 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end gap-5">
-                    <button className="btn">
-                        Upvotes <div className="badge badge-sm badge-secondary">+{upvote.length}</div>
-                    </button>
+                    <Link to="/dashboard/upvotes" className="btn">
+                        Upvotes <div className="badge badge-sm badge-secondary">{upvote.length}</div>
+                    </Link>
                 <label className="swap swap-rotate">
                     <input
                         type="checkbox"
@@ -137,7 +137,7 @@ const Navbar = () => {
 
 
                         </> : <>
-                            <Link to='/login' className="btn">Login</Link>
+                            <Link to='/login' className="btn btn-outline">Login</Link>
                         </>
                 }
             </div>

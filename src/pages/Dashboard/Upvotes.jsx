@@ -75,7 +75,7 @@ const Upvotes = () => {
                                 <th>
                                     <button
                                         onClick={() => handleDelete(item._id)}
-                                        className="btn text-white btn-error btn-xs">delete</button>
+                                        className="btn text-white btn-error btn-sm">delete</button>
                                 </th>
                             </tr>)
                         }

@@ -11,6 +11,9 @@ import ProductDetails from "../pages/ProductDetails/ProductDetails";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard";
 import Upvotes from "../pages/Dashboard/Upvotes";
+import Profile from "../pages/Dashboard/Profile";
+import AddProducts from "../pages/Dashboard/AddProducts";
+import MyProducts from "../pages/Dashboard/MyProducts";
 
 export const router = createBrowserRouter([
     {
@@ -47,8 +50,20 @@ export const router = createBrowserRouter([
         element: <Dashboard></Dashboard>,
         children: [
             {
+                path: 'profile',
+                element: <Profile></Profile>
+            },
+            {
                 path: 'upvotes',
                 element: <Upvotes></Upvotes>,
+            },
+            {
+                path: 'addProducts',
+                element: <AddProducts></AddProducts>
+            },
+            {
+                path: 'myProducts',
+                element: <MyProducts></MyProducts>
             },
         ]
     },
