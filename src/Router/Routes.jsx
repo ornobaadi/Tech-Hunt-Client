@@ -41,11 +41,11 @@ export const router = createBrowserRouter([
                 element: <SignUp></SignUp>,
             },
             {
-                path: 'productdetails',
+                path: 'product/:id',
                 element: <PrivateRoute>
                     <ProductDetails></ProductDetails>
                 </PrivateRoute>,
-            },
+            }
         ]
     },
     {

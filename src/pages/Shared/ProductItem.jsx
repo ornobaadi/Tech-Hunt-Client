@@ -33,7 +33,7 @@ const ProductItem = ({ product }) => {
 
     const handleUpvoteProcess = () => {
         const existingUpvote = upvote.find(item => item.productId === _id);
-        
+
         if (existingUpvote) {
             axiosSecure.delete(`/upvotes/${existingUpvote._id}`)
                 .then(res => {
@@ -41,7 +41,7 @@ const ProductItem = ({ product }) => {
                         setCurrentUpvotes(prev => prev - 1);
                         refetch();
                         refetchProducts();
-                        
+
                         Swal.fire({
                             position: "top-end",
                             icon: "success",
@@ -64,7 +64,7 @@ const ProductItem = ({ product }) => {
                         setCurrentUpvotes(prev => prev + 1);
                         refetch();
                         refetchProducts();
-                        
+
                         Swal.fire({
                             position: "top-end",
                             icon: "success",
@@ -83,7 +83,7 @@ const ProductItem = ({ product }) => {
         } else {
             // Store the product ID before redirecting to login
             localStorage.setItem('pendingUpvote', _id);
-            
+
             Swal.fire({
                 title: "Login Required",
                 text: "Please login to upvote this tech!",
@@ -119,7 +119,12 @@ const ProductItem = ({ product }) => {
                 />
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <Link className="text-lg font-bold hover:underline text-base-content">{productName}</Link>
+                        <Link
+                            to={`/product/${_id}`}
+                            className="text-lg font-bold hover:underline text-base-content"
+                        >
+                            {productName}
+                        </Link>
                         <a href={externalLink}
                             className="hover:text-purple-700"
                             target="_blank"
