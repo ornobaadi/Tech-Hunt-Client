@@ -2,16 +2,35 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { GrUserAdmin } from "react-icons/gr";
 import { MdAddModerator } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
-    const { data: users = [] } = useQuery({
+    const { data: users = [], refetch } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const res = await axiosSecure.get('/users');
             return res.data;
         }
     })
+
+    const handleMakeAdmin = user => {
+        axiosSecure.patch(`/users/admin/${user._id}`)
+        .then(res => {
+            console.log(res.data);
+            if(res.data.modifiedCount > 0){
+                refetch();
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: `${user.name} is admin now`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+    }
+
     return (
         <div>
             <div className="flex justify-evenly text-center my-10">
@@ -40,7 +59,9 @@ const ManageUsers = () => {
                                     <button className="btn"><MdAddModerator /></button>
                                 </td>
                                 <td>
-                                    <button className="btn"><GrUserAdmin /></button>
+                                    { user.role === 'admin' ? 'Admin' : <button 
+                                    onClick={() => handleMakeAdmin(user)}
+                                    className="btn"><GrUserAdmin /></button>}
                                 </td>
                             </tr>)
                         }
