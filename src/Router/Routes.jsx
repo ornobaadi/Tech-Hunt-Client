@@ -10,10 +10,13 @@ import SignUp from "../pages/SignUp/SignUp";
 import ProductDetails from "../pages/ProductDetails/ProductDetails";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard";
-import Upvotes from "../pages/Dashboard/Upvotes";
-import Profile from "../pages/Dashboard/Profile";
-import AddProducts from "../pages/Dashboard/AddProducts";
-import MyProducts from "../pages/Dashboard/MyProducts";
+import Upvotes from "../pages/User Dashboard/Upvotes";
+import Profile from "../pages/User Dashboard/Profile";
+import AddProducts from "../pages/User Dashboard/AddProducts";
+import MyProducts from "../pages/User Dashboard/MyProducts";
+import Statistics from "../pages/AdminDashboard/Statistics";
+import ManageUsers from "../pages/AdminDashboard/ManageUsers"
+import ManageCoupons from "../pages/AdminDashboard/ManageCoupons"
 
 export const router = createBrowserRouter([
     {
@@ -66,6 +69,21 @@ export const router = createBrowserRouter([
             {
                 path: 'myProducts',
                 element: <MyProducts></MyProducts>
+            },
+
+            // Admin Dashboard Routes
+
+            {
+                path: 'statistics',
+                element: <Statistics></Statistics>
+            },
+            {
+                path: 'manageUsers',
+                element: <ManageUsers></ManageUsers>
+            },
+            {
+                path: 'manageCoupons',
+                element: <ManageCoupons></ManageCoupons>
             },
         ]
     },
