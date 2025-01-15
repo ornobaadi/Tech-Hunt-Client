@@ -7,12 +7,13 @@ import useUpvote from "../hooks/useUpvote";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { MdManageAccounts } from "react-icons/md";
 import { RiCoupon2Fill } from "react-icons/ri";
+import useAdmin from "../hooks/useAdmin";
 
 const Dashboard = () => {
     const [upvote] = useUpvote();
 
-    // TODO: get isAdmin value from DB
-    const isAdmin = true;
+    // get isAdmin value from DB
+    const [isAdmin] = useAdmin();
 
     return (
         <div className="flex">
