@@ -6,10 +6,15 @@ import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { AuthContext } from "../../providers/AuthProvider";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 const MySwal = withReactContent(Swal);
 
 const SignUp = () => {
+
+    const axiosPublic = useAxiosPublic();
+
     const { createUser, updateUserProfile } = useContext(AuthContext);
     const { register, handleSubmit, reset } = useForm();
     const [password, setPassword] = useState("");
@@ -59,9 +64,19 @@ const SignUp = () => {
                 console.log(loggedUser);
                 updateUserProfile(data.name, data.photoURL)
                     .then(() => {
-                        console.log('user profile info updated');
-                        reset();
-                        navigate('/');
+                        // create user entry in DB
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    console.log('user added to DB');
+                                    reset();
+                                    navigate('/');
+                                }
+                            })
                     })
                     .catch(error => console.log(error))
             })
@@ -98,13 +113,10 @@ const SignUp = () => {
             <div className="hero bg-base-200 min-h-screen">
                 <div className="hero-content flex-col">
                     <div className="text-center lg:text-left">
-                        <h1 className="text-5xl font-bold">Sign up now!</h1>
-                        <p className="py-6">
-                            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                            quasi. In deleniti eaque aut repudiandae et a id nisi.
-                        </p>
+                        <h1 className="text-5xl font-bold pb-10">Sign up now!</h1>
+                        
                     </div>
-                    <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+                    <div className="card bg-base-100 w-full max-w-xl shrink-0 shadow-2xl">
                         <form onSubmit={handleSubmit(onSubmit)} className="card-body">
                             <div className="form-control">
                                 <label className="label">
@@ -204,6 +216,7 @@ const SignUp = () => {
                                 </Link>
                             </h2>
                         </div>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>
