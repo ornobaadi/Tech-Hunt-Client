@@ -17,6 +17,7 @@ import MyProducts from "../pages/User Dashboard/MyProducts";
 import Statistics from "../pages/AdminDashboard/Statistics";
 import ManageUsers from "../pages/AdminDashboard/ManageUsers"
 import ManageCoupons from "../pages/AdminDashboard/ManageCoupons"
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
     {
@@ -54,9 +55,10 @@ export const router = createBrowserRouter([
             <Dashboard></Dashboard>
         </PrivateRoute>,
         children: [
+            // User routes
             {
                 path: 'profile',
-                element: <Profile></Profile>
+                element: <Profile></Profile>,
             },
             {
                 path: 'upvotes',
@@ -64,26 +66,25 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'addProducts',
-                element: <AddProducts></AddProducts>
+                element: <AddProducts></AddProducts>,
             },
             {
                 path: 'myProducts',
-                element: <MyProducts></MyProducts>
+                element: <MyProducts></MyProducts>,
             },
 
             // Admin Dashboard Routes
-
             {
                 path: 'statistics',
-                element: <Statistics></Statistics>
+                element: <AdminRoute><Statistics></Statistics></AdminRoute>,
             },
             {
                 path: 'manageUsers',
-                element: <ManageUsers></ManageUsers>
+                element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute>,
             },
             {
                 path: 'manageCoupons',
-                element: <ManageCoupons></ManageCoupons>
+                element: <AdminRoute><ManageCoupons></ManageCoupons></AdminRoute>,
             },
         ]
     },

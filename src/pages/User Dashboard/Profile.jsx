@@ -90,7 +90,7 @@ const Profile = () => {
             <Helmet>
                 <title>My Profile | Tech Hunt</title>
             </Helmet>
-            <div className="w-full max-w-lg bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+            <div className="w-full max-w-lg rounded-xl shadow-lg border border-slate-400 overflow-hidden">
                 {/* Profile Header */}
                 <div className="flex flex-col items-center p-8 space-y-4">
                     {user?.photoURL ? (
@@ -100,12 +100,12 @@ const Profile = () => {
                             className="w-28 h-28 rounded-full object-cover border-4 border-blue-300 shadow-lg"
                         />
                     ) : (
-                        <div className="w-28 h-28 rounded-full bg-slate-200 border-4 border-blue-300 shadow-lg"></div>
+                        <div className="w-28 h-28 rounded-full border-4 border-blue-300 shadow-lg"></div>
                     )}
-                    <h1 className="text-3xl font-semibold text-slate-800">
+                    <h1 className="text-3xl font-semibold ">
                         Welcome, {isEditing ? formData.name : (mongoUser?.name || user?.displayName || "Guest")}!
                     </h1>
-                    <p className="text-sm text-slate-600">{user?.email}</p>
+                    <p className="text-sm ">{user?.email}</p>
                 </div>
 
                 {/* Profile Form */}
@@ -146,7 +146,7 @@ const Profile = () => {
                                             photoURL: mongoUser?.photoURL || user?.photoURL || ""
                                         });
                                     }}
-                                    className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800"
+                                    className="px-4 py-2 text-sm font-medium"
                                     disabled={loading}
                                 >
                                     Cancel
@@ -163,21 +163,21 @@ const Profile = () => {
                     ) : (
                         <div className="space-y-4">
                             <div>
-                                <h3 className="text-lg font-medium text-slate-700">Your Profile Information</h3>
+                                <h3 className="text-lg font-medium ">Your Profile Information</h3>
                                 <ul className="mt-4 space-y-2">
                                     <li className="flex justify-between">
-                                        <span className="text-slate-500">Name:</span>
-                                        <span className="text-slate-700">
+                                        <span className="">Name:</span>
+                                        <span className="">
                                             {mongoUser?.name || user?.displayName || "Not provided"}
                                         </span>
                                     </li>
                                     <li className="flex justify-between">
-                                        <span className="text-slate-500">Email:</span>
-                                        <span className="text-slate-700">{user?.email}</span>
+                                        <span className="">Email:</span>
+                                        <span className="">{user?.email}</span>
                                     </li>
                                     <li className="flex justify-between">
-                                        <span className="text-slate-500">Last Updated:</span>
-                                        <span className="text-slate-700">
+                                        <span className="">Last Updated:</span>
+                                        <span className="">
                                             {mongoUser?.lastUpdated 
                                                 ? new Date(mongoUser.lastUpdated).toLocaleDateString()
                                                 : "Never"}

@@ -3,10 +3,10 @@ import useAdmin from "../hooks/useAdmin";
 import useAuth from "../hooks/useAuth";
 
 
-const AdminRoute = (children) => {
-    const [user, loading] = useAuth();
+const AdminRoute = ({children}) => {
+    const {user, loading} = useAuth();
     const [isAdmin, isAdminLoading] = useAdmin();
-    const location = useLocation()
+    const location = useLocation();
 
     if (loading || isAdminLoading) {
         return <div className="flex justify-center my-10">
@@ -17,7 +17,7 @@ const AdminRoute = (children) => {
     if (user && isAdmin) {
         return children;
     }
-    return <Navigate to='/login' state={{ from: location }} replace  ></Navigate>
+    return <Navigate to='/' state={{ from: location }} replace  ></Navigate>
 };
 
 export default AdminRoute;
