@@ -47,7 +47,6 @@ const Upvotes = () => {
                             <th>#</th>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Total Upvote</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -71,7 +70,6 @@ const Upvotes = () => {
                                 <td>
                                     <h2>{item.productName}</h2>
                                 </td>
-                                <td></td>
                                 <th>
                                     <button
                                         onClick={() => handleDelete(item._id)}

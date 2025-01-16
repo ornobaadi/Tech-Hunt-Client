@@ -2,10 +2,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { WithContext as ReactTags } from 'react-tag-input';
 import useAuth from '../../hooks/useAuth';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import Swal from 'sweetalert2';
 
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const AddProducts = () => {
     const { user } = useAuth();
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue, reset } = useForm({
         defaultValues: {
             ownerName: user?.displayName || '',
             ownerEmail: user?.email || '',
@@ -14,6 +17,8 @@ const AddProducts = () => {
             productImage: ''
         }
     });
+
+    const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
     const [tags, setTags] = React.useState([]);
     const [previewImage, setPreviewImage] = React.useState('');
@@ -41,8 +46,46 @@ const AddProducts = () => {
         setValue('tags', newTags);
     };
 
-    const onSubmit = (data) => {
+
+    const axiosPublic = useAxiosPublic();
+    const onSubmit = async (data) => {
         console.log('Form submitted:', data);
+        // image upload to imgbb then get url
+        const imageFile = { image: data.productImage[0] }
+        const res = await axiosPublic.post(image_hosting_api, imageFile, {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        });
+        if (res.data.success) {
+            // now send the product image url 
+            const productItem = {
+                productName: data.productName,
+                productImage: res.data.data.display_url,
+                description: data.description,
+                ownerName: data.ownerName,
+                ownerImage: data.ownerImage,
+                ownerEmail: data.ownerEmail,
+                externalLink: data.externalLink,
+                tags: data.tags,
+                upvotes: 0,
+            };
+
+            const productRes = await axiosPublic.post('/products', productItem);
+            console.log(productRes.data);
+            if (productRes.data.insertedId) {
+                // show success popup
+                reset();
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: `${data.productName} added to Products`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        console.log('with image url', res.data);
     };
 
     return (
@@ -156,8 +199,8 @@ const AddProducts = () => {
                                 handleAddition={(tag) => handleAddTag(tag.text)}
                                 inputFieldPosition="bottom"
                                 classNames={{
-                                    tags: 'flex flex-wrap gap-2',
-                                    tag: 'badge badge-primary badge-lg gap-2',
+                                    tags: 'flex flex-wrap gap-2 mt-2',
+                                    tag: 'badge badge-primary badge-lg gap-2 mr-2',
                                     tagInput: 'input input-bordered w-full mt-2',
                                     remove: 'cursor-pointer hover:text-error'
                                 }}
