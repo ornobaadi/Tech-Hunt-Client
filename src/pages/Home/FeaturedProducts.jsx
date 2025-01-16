@@ -3,7 +3,7 @@ import useProducts from "../../hooks/useProducts";
 
 const FeaturedProducts = () => {
     const [products] = useProducts();
-    const featured = products.filter(products => products.category === 'featured')
+    const featured = products.filter(products => products.featured === true)
 
 
     return (

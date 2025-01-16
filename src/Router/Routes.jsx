@@ -18,6 +18,9 @@ import Statistics from "../pages/AdminDashboard/Statistics";
 import ManageUsers from "../pages/AdminDashboard/ManageUsers"
 import ManageCoupons from "../pages/AdminDashboard/ManageCoupons"
 import AdminRoute from "./AdminRoute";
+import ModeratorRoute from "./ModeratorRoute";
+import ProductReviewQueue from "../pages/ModeratorDashboard/ProductReviewQueue";
+import ReportedProducts from "../pages/ModeratorDashboard/ReportedProducts";
 
 export const router = createBrowserRouter([
     {
@@ -85,6 +88,15 @@ export const router = createBrowserRouter([
             {
                 path: 'manageCoupons',
                 element: <AdminRoute><ManageCoupons></ManageCoupons></AdminRoute>,
+            },
+            // Moderator Dashboard Routes
+            {
+                path: 'reviewQueue',
+                element: <ModeratorRoute><ProductReviewQueue></ProductReviewQueue></ModeratorRoute>,
+            },
+            {
+                path: 'reportedContents',
+                element: <ModeratorRoute><ReportedProducts></ReportedProducts></ModeratorRoute>,
             },
         ]
     },

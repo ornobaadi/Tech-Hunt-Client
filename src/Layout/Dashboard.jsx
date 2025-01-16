@@ -7,13 +7,14 @@ import useUpvote from "../hooks/useUpvote";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { MdManageAccounts } from "react-icons/md";
 import { RiCoupon2Fill } from "react-icons/ri";
+import { MdQueue, MdReportProblem } from "react-icons/md"; // Added new icons
 import useAdmin from "../hooks/useAdmin";
+import useModerator from "../hooks/useModerator"; // Import the moderator hook
 
 const Dashboard = () => {
     const [upvote] = useUpvote();
-
-    // get isAdmin value from DB
     const [isAdmin] = useAdmin();
+    const [isModerator] = useModerator(); // Add moderator check
 
     return (
         <div className="flex">
@@ -27,7 +28,7 @@ const Dashboard = () => {
                 </div>
                 <ul className="menu px-5 w-full *:text-lg">
                     {
-                        isAdmin ?
+                        isAdmin ? (
                             <>
                                 <li>
                                     <NavLink className="flex gap-5" to="/dashboard/statistics">
@@ -44,9 +45,21 @@ const Dashboard = () => {
                                         <RiCoupon2Fill />
                                         Manage Coupons</NavLink>
                                 </li>
-
                             </>
-                            :
+                        ) : isModerator ? (
+                            <>
+                                <li>
+                                    <NavLink className="flex gap-5" to="/dashboard/reviewQueue">
+                                        <MdQueue />
+                                        Product Review Queue</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink className="flex gap-5" to="/dashboard/reportedContents">
+                                        <MdReportProblem />
+                                        Reported Contents</NavLink>
+                                </li>
+                            </>
+                        ) : (
                             <>
                                 <li>
                                     <NavLink className="flex gap-5" to="/dashboard/profile">
@@ -69,6 +82,7 @@ const Dashboard = () => {
                                         My Products</NavLink>
                                 </li>
                             </>
+                        )
                     }
                     {/* Shared Navlinks */}
                     <div className="divider"></div>
@@ -78,7 +92,6 @@ const Dashboard = () => {
                     <li>
                         <NavLink className="flex gap-5" to="/products"><FaHome />Products</NavLink>
                     </li>
-
                 </ul>
             </div>
             {/* Dashboard Content */}

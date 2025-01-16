@@ -16,19 +16,36 @@ const ManageUsers = () => {
 
     const handleMakeAdmin = user => {
         axiosSecure.patch(`/users/admin/${user._id}`)
-        .then(res => {
-            console.log(res.data);
-            if(res.data.modifiedCount > 0){
-                refetch();
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: `${user.name} is admin now`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-        })
+            .then(res => {
+                console.log(res.data);
+                if (res.data.modifiedCount > 0) {
+                    refetch();
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `${user.name} is admin now`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+    }
+
+    const handleMakeModerator = user => {
+        axiosSecure.patch(`/users/moderator/${user._id}`)
+            .then(res => {
+                console.log(res.data);
+                if (res.data.modifiedCount > 0) {
+                    refetch();
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `${user.name} is moderator now`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
     }
 
     return (
@@ -45,6 +62,7 @@ const ManageUsers = () => {
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Make Moderator</th>
                             <th>Make Admin</th>
                         </tr>
@@ -55,13 +73,27 @@ const ManageUsers = () => {
                                 <th>{index + 1}</th>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
+                                <td>{user.role || 'User'}</td>
                                 <td>
-                                    <button className="btn"><MdAddModerator /></button>
+                                    {
+                                        user.role === 'moderator' ? 'Moderator' :
+                                        user.role === 'admin' ? 'Admin' :
+                                        <button
+                                            onClick={() => handleMakeModerator(user)}
+                                            className="btn">
+                                            <MdAddModerator />
+                                        </button>
+                                    }
                                 </td>
                                 <td>
-                                    { user.role === 'admin' ? 'Admin' : <button 
-                                    onClick={() => handleMakeAdmin(user)}
-                                    className="btn"><GrUserAdmin /></button>}
+                                    {
+                                        user.role === 'admin' ? 'Admin' :
+                                        <button
+                                            onClick={() => handleMakeAdmin(user)}
+                                            className="btn">
+                                            <GrUserAdmin />
+                                        </button>
+                                    }
                                 </td>
                             </tr>)
                         }

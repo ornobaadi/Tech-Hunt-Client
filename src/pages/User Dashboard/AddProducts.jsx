@@ -85,7 +85,7 @@ const AddProducts = () => {
                 });
             }
         }
-        console.log('with image url', res.data);
+        console.log(res.data);
     };
 
     return (
