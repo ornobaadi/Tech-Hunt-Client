@@ -97,7 +97,6 @@ const ProductReviewQueue = () => {
                             <th>#</th>
                             <th>Product Name</th>
                             
-                            <th>Featured</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -121,6 +120,7 @@ const ProductReviewQueue = () => {
                                         </div>
                                     </div>
                                 </td>
+                                
                                 <td className="flex gap-2">
                                     <Link to={`/product/${product._id}`}>
                                         <button className="btn btn-sm btn-info">

@@ -84,27 +84,56 @@ const ProductDetails = () => {
     };
 
     const handleReport = async () => {
-        const { value: reportReason } = await Swal.fire({
-            title: 'Report Product',
-            input: 'textarea',
-            inputLabel: 'Reason for reporting',
-            inputPlaceholder: 'Type your reason here...',
-            showCancelButton: true,
-        });
-
-        if (reportReason) {
-            try {
-                await axiosSecure.post('/reports', {
+        try {
+            const { value: reportReason } = await Swal.fire({
+                title: 'Report Product',
+                input: 'textarea',
+                inputLabel: 'Reason for reporting',
+                inputPlaceholder: 'Type your reason here...',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to write something!';
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Submit Report'
+            });
+    
+            if (reportReason) {
+                const reportData = {
                     productId: id,
                     productName: product.productName,
                     reportedBy: user.email,
+                    reporterName: user.displayName,
+                    productImage: product.productImage,
+                    ownerEmail: product.ownerEmail,
+                    ownerName: product.ownerName,
+                    productTimestamp: product.createdAt, // Use the product's creation date
                     reason: reportReason,
                     timestamp: new Date()
-                });
-                Swal.fire('Reported!', 'Product has been reported successfully.', 'success');
-            } catch (error) {
-                Swal.fire('Error', 'Failed to submit report.', 'error');
+                };
+    
+                const response = await axiosSecure.post('/reports', reportData);
+    
+                if (response.data.insertedId) {
+                    await Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Report submitted successfully",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             }
+        } catch (error) {
+            console.error('Error submitting report:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to submit report. Please try again."
+            });
         }
     };
 

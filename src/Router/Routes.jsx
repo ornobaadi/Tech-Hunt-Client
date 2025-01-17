@@ -95,7 +95,7 @@ export const router = createBrowserRouter([
                 element: <ModeratorRoute><ProductReviewQueue></ProductReviewQueue></ModeratorRoute>,
             },
             {
-                path: 'reportedContents',
+                path: 'reportedProducts',
                 element: <ModeratorRoute><ReportedProducts></ReportedProducts></ModeratorRoute>,
             },
         ]

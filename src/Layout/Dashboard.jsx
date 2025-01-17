@@ -54,9 +54,9 @@ const Dashboard = () => {
                                         Product Review Queue</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/reportedContents">
+                                    <NavLink className="flex gap-5" to="/dashboard/reportedProducts">
                                         <MdReportProblem />
-                                        Reported Contents</NavLink>
+                                        Reported Products</NavLink>
                                 </li>
                             </>
                         ) : (
