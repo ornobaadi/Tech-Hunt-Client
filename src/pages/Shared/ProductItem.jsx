@@ -110,50 +110,55 @@ const ProductItem = ({ product }) => {
     const hasUpvoted = upvote.some(item => item.productId === _id);
 
     return (
-        <div>
-            <div className="flex gap-4 p-5 bg-base-100 shadow-md rounded-lg hover:shadow-lg transition-shadow">
-                <img
-                    src={productImage}
-                    alt={productName}
-                    className="w-12 h-12 lg:w-24 lg:h-24 rounded-md object-fill"
-                />
-                <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                        <Link
-                            to={`/product/${_id}`}
-                            className="text-lg font-bold hover:underline text-base-content"
-                        >
-                            {productName}
-                        </Link>
-                        <a href={externalLink}
-                            className="hover:text-purple-700"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                            <GrShare />
-                        </a>
-                    </div>
-                    <p className="text-sm text-gray-500 mb-3">{description}</p>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                        {tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="badge cursor-pointer badge-outline badge-primary text-xs"
+        <div className="h-full">
+            <div className="flex flex-col h-full gap-4 p-5 bg-base-100 shadow-md rounded-lg hover:shadow-lg transition-shadow">
+                <div className="flex gap-4">
+                    <img
+                        src={productImage}
+                        alt={productName}
+                        className="w-12 h-12 lg:w-24 lg:h-24 rounded-md object-cover flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0"> {/* Added min-w-0 to handle text overflow */}
+                        <div className="flex items-center gap-2">
+                            <Link
+                                to={`/product/${_id}`}
+                                className="text-lg font-bold hover:underline text-base-content truncate"
                             >
-                                {tag}
-                            </span>
-                        ))}
+                                {productName}
+                            </Link>
+                            <a href={externalLink}
+                                className="hover:text-purple-700 flex-shrink-0"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                <GrShare />
+                            </a>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-3 line-clamp-2">{description}</p>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {tags.map((tag, index) => (
+                                <span
+                                    key={index}
+                                    className="badge cursor-pointer badge-outline badge-primary text-xs"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-auto"> {/* Push this div to bottom */}
+                    <div className="flex justify-end items-center gap-4 mb-2">
+                        <button
+                            onClick={handleUpvote}
+                            className={`btn ${hasUpvoted ? 'btn-success' : 'btn-outline'} flex items-center gap-2`}>
+                            <FaCircleChevronUp />
+                            {currentUpvotes}
+                        </button>
                     </div>
                     <span className="text-xs text-gray-500">
                         Owned by {ownerName}
                     </span>
-                </div>
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={handleUpvote}
-                        className={`btn ${hasUpvoted ? 'btn-success' : 'btn-outline'} flex items-center gap-2`}>
-                        <FaCircleChevronUp />
-                        {currentUpvotes}
-                    </button>
                 </div>
             </div>
         </div>

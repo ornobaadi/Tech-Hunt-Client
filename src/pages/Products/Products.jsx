@@ -1,7 +1,7 @@
-import ProductItem from "../Shared/ProductItem";
 import { useEffect, useState } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useSearchParams } from "react-router-dom";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import ProductItem from "../Shared/ProductItem";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
 const Products = () => {
@@ -15,12 +15,14 @@ const Products = () => {
             setLoading(true);
             try {
                 const searchTerm = searchParams.get('q');
-                const url = searchTerm 
+                const response = await axiosSecure.get(searchTerm 
                     ? `/products/search?q=${searchTerm}`
-                    : '/products';
-                    
-                const response = await axiosSecure.get(url);
-                setProducts(response.data);
+                    : '/products'
+                );
+                
+                // Only filter for accepted products
+                const acceptedProducts = response.data.filter(p => p.status === 'accepted');
+                setProducts(acceptedProducts);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {
@@ -31,8 +33,17 @@ const Products = () => {
         fetchProducts();
     }, [searchParams, axiosSecure]);
 
-    const handleSearchResults = (results) => {
-        setProducts(results);
+    const handleSearchResults = (searchTerm) => {
+        // Update the search params which will trigger the useEffect
+        const currentParams = new URLSearchParams(window.location.search);
+        if (searchTerm) {
+            currentParams.set('q', searchTerm);
+        } else {
+            currentParams.delete('q');
+        }
+        window.history.pushState({}, '', `${window.location.pathname}?${currentParams}`);
+        // This will trigger the useEffect which will fetch the data
+        window.dispatchEvent(new Event('popstate'));
     };
 
     return (
@@ -44,10 +55,26 @@ const Products = () => {
                     <span className="loading loading-bars loading-lg"></span>
                 </div>
             ) : (
-                <div className="space-y-4">
-                    {products.map(product => (
-                        <ProductItem key={product._id} product={product} />
-                    ))}
+                <div>
+                    {products.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {products.map(product => (
+                                <ProductItem 
+                                    key={product._id} 
+                                    product={product}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-8">
+                            <h3 className="text-xl font-semibold text-gray-600">
+                                No products found
+                            </h3>
+                            <p className="text-gray-500 mt-2">
+                                Try adjusting your search criteria
+                            </p>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

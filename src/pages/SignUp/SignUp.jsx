@@ -110,7 +110,7 @@ const SignUp = () => {
             <Helmet>
                 <title>Signup | Tech Hunt</title>
             </Helmet>
-            <div className="hero bg-base-200 min-h-screen">
+            <div className="hero bg-base-100 min-h-screen">
                 <div className="hero-content flex-col">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold pb-10">Sign up now!</h1>
