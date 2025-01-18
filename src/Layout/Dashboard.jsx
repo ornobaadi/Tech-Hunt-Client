@@ -72,9 +72,9 @@ const Dashboard = () => {
                                         My Upvotes ({upvote.length})</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/addProducts">
+                                    <NavLink className="flex gap-5" to="/dashboard/addProduct">
                                         <IoIosAddCircle />
-                                        Add Products</NavLink>
+                                        Add Product</NavLink>
                                 </li>
                                 <li>
                                     <NavLink className="flex gap-5" to="/dashboard/myProducts">

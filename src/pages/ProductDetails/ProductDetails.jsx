@@ -232,7 +232,7 @@ const ProductDetails = () => {
                         <img
                             src={user.photoURL}
                             alt={user.displayName}
-                            className="w-12 h-12 rounded-full border-2 border-primary"
+                            className="w-12 h-12 rounded-full border-2 border-purple-600"
                         />
                         <div>
                             <p className="font-semibold text-lg">{user.displayName}</p>

@@ -4,9 +4,11 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-const AddProducts = () => {
+const AddProduct = () => {
+    const navigate = useNavigate()
     const { user } = useAuth();
     const { register, handleSubmit, setValue, reset } = useForm({
         defaultValues: {
@@ -69,6 +71,7 @@ const AddProducts = () => {
                 externalLink: data.externalLink,
                 tags: data.tags,
                 upvotes: 0,
+                timestamp: new Date().toISOString(),
             };
 
             const productRes = await axiosPublic.post('/products', productItem);
@@ -83,6 +86,9 @@ const AddProducts = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setTimeout(() => {
+                    navigate('/dashboard/myProducts');
+                }, 1500);
             }
         }
         console.log(res.data);
@@ -169,7 +175,7 @@ const AddProducts = () => {
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
                                         <h3 className="text-xl font-semibold">{user?.displayName}</h3>
-                                        <div className="badge badge-ghost badge-sm">Verified</div>
+                                        {/* <div className="badge badge-ghost badge-sm">Verified</div> */}
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-2 text-base-content/70">
@@ -240,4 +246,4 @@ const AddProducts = () => {
     );
 };
 
-export default AddProducts;
+export default AddProduct;

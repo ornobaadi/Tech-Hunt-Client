@@ -137,11 +137,11 @@ const MyProducts = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                axiosSecure.delete(`/products/${id}`)
-                .then(res => {
-                    if(res.data.deletedCount > 0){
+                try {
+                    const res = await axiosSecure.delete(`/products/${id}`);
+                    if (res.data.deletedCount > 0) {
                         setProducts(products.filter(product => product._id !== id));
                         Swal.fire({
                             title: "Deleted!",
@@ -149,7 +149,14 @@ const MyProducts = () => {
                             icon: "success"
                         });
                     }
-                })
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Delete Failed",
+                        text: error.response?.data?.message || "Failed to delete product"
+                    });
+                }
             }
         });
     };
@@ -174,6 +181,7 @@ const MyProducts = () => {
                             <th>#</th>
                             <th>Image</th>
                             <th>Name</th>
+                            <th>Upvotes</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -193,6 +201,11 @@ const MyProducts = () => {
                                     <h2>{product.productName}</h2>
                                 </td>
                                 <td>
+                                    <div className="flex items-center gap-2">
+                                        <span className="badge badge-info">{product.upvotes || 0}</span>
+                                    </div>
+                                </td>
+                                <td>
                                     <span className={`badge ${
                                         product.status === 'accepted' ? 'badge-success' :
                                         product.status === 'rejected' ? 'badge-error' :
@@ -205,7 +218,7 @@ const MyProducts = () => {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleEdit(product)}
-                                            className="btn btn-info btn-sm text-white"
+                                            className="btn btn-warning btn-sm text-white"
                                         >
                                             Edit
                                         </button>

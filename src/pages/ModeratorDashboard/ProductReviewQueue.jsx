@@ -10,8 +10,20 @@ const ProductReviewQueue = () => {
         queryFn: async () => {
             const res = await axiosSecure.get('/products/review-queue');
             return res.data.sort((a, b) => {
-                if (a.status === 'pending' && b.status !== 'pending') return -1;
-                if (a.status !== 'pending' && b.status === 'pending') return 1;
+                // Ensure products with no status or 'pending' status come first
+                const statusA = a.status || 'pending';
+                const statusB = b.status || 'pending';
+
+                // If one is pending and the other isn't, pending should come first
+                if (statusA === 'pending' && statusB !== 'pending') return -1;
+                if (statusA !== 'pending' && statusB === 'pending') return 1;
+
+                // If both are non-pending, sort by timestamp if available
+                if (a.timestamp && b.timestamp) {
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                }
+
+                // If no timestamp, maintain current order
                 return 0;
             });
         }
@@ -19,7 +31,7 @@ const ProductReviewQueue = () => {
 
     const handleAccept = async (id) => {
         try {
-            await axiosSecure.patch(`/products/status/${id}`, { 
+            await axiosSecure.patch(`/products/status/${id}`, {
                 status: 'accepted'
             });
             Swal.fire({
@@ -42,7 +54,7 @@ const ProductReviewQueue = () => {
 
     const handleReject = async (id) => {
         try {
-            await axiosSecure.patch(`/products/status/${id}`, { 
+            await axiosSecure.patch(`/products/status/${id}`, {
                 status: 'rejected',
                 featured: false // Remove featured status when rejecting
             });
@@ -66,8 +78,8 @@ const ProductReviewQueue = () => {
 
     const handleToggleFeatured = async (id, currentFeatured) => {
         try {
-            await axiosSecure.patch(`/products/status/${id}`, { 
-                featured: !currentFeatured 
+            await axiosSecure.patch(`/products/status/${id}`, {
+                featured: !currentFeatured
             });
             Swal.fire({
                 position: "center",
@@ -92,17 +104,17 @@ const ProductReviewQueue = () => {
             <h2 className="text-2xl font-semibold mb-4">Product Review Queue</h2>
             <div className="overflow-x-auto">
                 <table className="table">
-                <thead>
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Product Name</th>
-                            
+
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {products.map((product, index) => (
-                            <tr key={product._id} 
+                            <tr key={product._id}
                                 className={product.status === 'pending' ? 'bg-base-200' : ''}>
                                 <td>{index + 1}</td>
                                 <td>
@@ -120,7 +132,7 @@ const ProductReviewQueue = () => {
                                         </div>
                                     </div>
                                 </td>
-                                
+
                                 <td className="flex gap-2">
                                     <Link to={`/product/${product._id}`}>
                                         <button className="btn btn-sm btn-info">

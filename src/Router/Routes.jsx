@@ -12,7 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard";
 import Upvotes from "../pages/User Dashboard/Upvotes";
 import Profile from "../pages/User Dashboard/Profile";
-import AddProducts from "../pages/User Dashboard/AddProducts";
+import AddProduct from "../pages/User Dashboard/AddProduct";
 import MyProducts from "../pages/User Dashboard/MyProducts";
 import Statistics from "../pages/AdminDashboard/Statistics";
 import ManageUsers from "../pages/AdminDashboard/ManageUsers"
@@ -68,8 +68,8 @@ export const router = createBrowserRouter([
                 element: <Upvotes></Upvotes>,
             },
             {
-                path: 'addProducts',
-                element: <AddProducts></AddProducts>,
+                path: 'addProduct',
+                element: <AddProduct></AddProduct>,
             },
             {
                 path: 'myProducts',

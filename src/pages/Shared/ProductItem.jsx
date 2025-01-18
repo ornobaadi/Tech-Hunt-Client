@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCircleChevronUp } from "react-icons/fa6";
 import { GrShare } from "react-icons/gr";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaClock } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
-import Swal from "sweetalert2";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useUpvote from "../../hooks/useUpvote";
-import { useState, useEffect } from 'react';
 import useProducts from "../../hooks/useProducts";
+import Swal from "sweetalert2";
 
 const ProductItem = ({ product }) => {
     const navigate = useNavigate();
@@ -18,20 +19,46 @@ const ProductItem = ({ product }) => {
     const [, refetchProducts] = useProducts();
     const [currentUpvotes, setCurrentUpvotes] = useState(product.upvotes || 0);
 
-    const { _id, productImage, productName, externalLink, tags, ownerName, description } = product;
+    const { _id, productImage, productName, externalLink, tags, ownerName, ownerEmail, description, timestamp } = product;
 
-    // Check for pending upvote after login
+    const isOwner = user?.email === ownerEmail;
+
+    // Format date and time
+    const formatDateTime = (timestamp) => {
+        const date = new Date(timestamp);
+        return {
+            date: date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            }),
+            time: date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            })
+        };
+    };
+
+    const { date, time } = timestamp ? formatDateTime(timestamp) : { date: 'N/A', time: 'N/A' };
+
     useEffect(() => {
         const pendingUpvoteId = localStorage.getItem('pendingUpvote');
         if (user && pendingUpvoteId === _id) {
-            // Clear the pending upvote
             localStorage.removeItem('pendingUpvote');
-            // Process the upvote
             handleUpvoteProcess();
         }
     }, [user]);
 
     const handleUpvoteProcess = () => {
+        if (isOwner) {
+            Swal.fire({
+                icon: "error",
+                title: "Cannot upvote own product",
+                text: "You cannot upvote your own products",
+            });
+            return;
+        }
+
         const existingUpvote = upvote.find(item => item.productId === _id);
 
         if (existingUpvote) {
@@ -57,6 +84,7 @@ const ProductItem = ({ product }) => {
                 email: user.email,
                 productName,
                 productImage,
+                timestamp: new Date().toISOString()
             }
             axiosSecure.post('/upvotes', upvoteItem)
                 .then(res => {
@@ -81,9 +109,7 @@ const ProductItem = ({ product }) => {
         if (user && user.email) {
             handleUpvoteProcess();
         } else {
-            // Store the product ID before redirecting to login
             localStorage.setItem('pendingUpvote', _id);
-
             Swal.fire({
                 title: "Login Required",
                 text: "Please login to upvote this tech!",
@@ -96,7 +122,6 @@ const ProductItem = ({ product }) => {
                 if (result.isConfirmed) {
                     navigate('/login', { state: { from: location } })
                 } else {
-                    // If user cancels login, remove the pending upvote
                     localStorage.removeItem('pendingUpvote');
                 }
             });
@@ -118,7 +143,7 @@ const ProductItem = ({ product }) => {
                         alt={productName}
                         className="w-12 h-12 lg:w-24 lg:h-24 rounded-md object-cover flex-shrink-0"
                     />
-                    <div className="flex-1 min-w-0"> {/* Added min-w-0 to handle text overflow */}
+                    <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                             <Link
                                 to={`/product/${_id}`}
@@ -144,25 +169,36 @@ const ProductItem = ({ product }) => {
                                 </span>
                             ))}
                         </div>
+                        {timestamp && (
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <FaClock className="text-purple-500" />
+                                <span>Added on {date} at {time}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                <div className="mt-auto"> {/* Push this div to bottom */}
-                    <div className="flex justify-end items-center gap-4 mb-2">
+                <div className="mt-auto">
+                    <div className="flex justify-between items-center gap-4 mb-2">
+                        <span className="text-xs text-gray-500">
+                            Owned by {ownerName}
+                        </span>
                         <button
                             onClick={handleUpvote}
-                            className={`btn ${hasUpvoted ? 'btn-success' : 'btn-outline'} flex items-center gap-2`}>
+                            disabled={isOwner}
+                            className={`btn ${hasUpvoted ? 'btn-success' : 'btn-outline'} 
+                                    ${isOwner ? 'btn-disabled' : ''} 
+                                    flex items-center gap-2`}
+                        >
                             <FaCircleChevronUp />
                             {currentUpvotes}
                         </button>
                     </div>
-                    <span className="text-xs text-gray-500">
-                        Owned by {ownerName}
-                    </span>
                 </div>
             </div>
         </div>
     );
 };
+
 
 export default ProductItem;
