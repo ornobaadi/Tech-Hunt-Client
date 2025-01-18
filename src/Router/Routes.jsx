@@ -21,6 +21,7 @@ import AdminRoute from "./AdminRoute";
 import ModeratorRoute from "./ModeratorRoute";
 import ProductReviewQueue from "../pages/ModeratorDashboard/ProductReviewQueue";
 import ReportedProducts from "../pages/ModeratorDashboard/ReportedProducts";
+import Payment from "../pages/User Dashboard/Payment";
 
 export const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <Profile></Profile>,
+            },
+            {
+                path: 'payment',
+                element: <Payment></Payment>,
             },
             {
                 path: 'upvotes',

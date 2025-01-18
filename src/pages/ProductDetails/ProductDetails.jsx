@@ -100,7 +100,7 @@ const ProductDetails = () => {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Submit Report'
             });
-    
+
             if (reportReason) {
                 const reportData = {
                     productId: id,
@@ -114,9 +114,9 @@ const ProductDetails = () => {
                     reason: reportReason,
                     timestamp: new Date()
                 };
-    
+
                 const response = await axiosSecure.post('/reports', reportData);
-    
+
                 if (response.data.insertedId) {
                     await Swal.fire({
                         position: "center",
@@ -185,7 +185,7 @@ const ProductDetails = () => {
                     <img
                         src={product.productImage}
                         alt={product.productName}
-                        className="w-full md:w-1/3 rounded-lg object-cover"
+                        className="h-40 w-40 md:w-80 md:h-80  object-cover rounded-lg"
                     />
                     <div className="flex-1">
                         <div className="flex justify-between items-start">
@@ -197,6 +197,18 @@ const ProductDetails = () => {
                                 <span key={index} className="badge badge-outline badge-primary">{tag}</span>
                             ))}
                         </div>
+                        <p className="text-sm text-gray-500 mb-4">
+                            Added on: {product.timestamp ?
+                                new Date(product.timestamp).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })
+                                : 'Date not available'
+                            }
+                        </p>
                         <div className="flex gap-4 mb-4">
                             <a
                                 href={product.externalLink}

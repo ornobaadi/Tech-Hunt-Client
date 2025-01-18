@@ -3,6 +3,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { toast } from 'react-hot-toast';
 import useAuth from "../../hooks/useAuth"
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const { user, updateUserProfile } = useAuth()
@@ -10,7 +11,25 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [mongoUser, setMongoUser] = useState(null);
     const axiosPublic = useAxiosPublic();
-    
+
+    const [isSubscribed, setIsSubscribed] = useState(false);
+
+    // Add this effect to fetch subscription status
+    useEffect(() => {
+        const fetchSubscriptionStatus = async () => {
+            try {
+                const response = await axiosPublic.get(`/users/${user?.email}`);
+                setIsSubscribed(response.data?.isSubscribed || false);
+            } catch (error) {
+                console.error('Error fetching subscription status:', error);
+            }
+        };
+
+        if (user?.email) {
+            fetchSubscriptionStatus();
+        }
+    }, [user, axiosPublic]);
+
     const [formData, setFormData] = useState({
         name: user?.displayName || "",
         photoURL: user?.photoURL || ""
@@ -50,11 +69,11 @@ const Profile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        
+
         try {
             // Update profile in Firebase
             await updateUserProfile(formData.name, formData.photoURL);
-            
+
             // Update in MongoDB
             const updatedUserData = {
                 name: formData.name,
@@ -70,10 +89,10 @@ const Profile = () => {
                 // If user doesn't exist in MongoDB, create new entry
                 await axiosPublic.post('/users', updatedUserData);
             }
-            
+
             toast.success('Profile updated successfully!');
             setIsEditing(false);
-            
+
             // Refresh MongoDB user data
             const response = await axiosPublic.get(`/users/${user.email}`);
             setMongoUser(response.data);
@@ -178,13 +197,30 @@ const Profile = () => {
                                     <li className="flex justify-between">
                                         <span className="">Last Updated:</span>
                                         <span className="">
-                                            {mongoUser?.lastUpdated 
+                                            {mongoUser?.lastUpdated
                                                 ? new Date(mongoUser.lastUpdated).toLocaleDateString()
                                                 : "Never"}
                                         </span>
                                     </li>
                                 </ul>
                             </div>
+                            {!isSubscribed ? (
+                                <div className="mt-6 text-center">
+                                    <Link
+                                        to="/dashboard/payment"
+                                        className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                    >
+                                        Subscribe Now - $49.99/month
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="mt-6 flex items-center justify-center space-x-2">
+                                    <div className="flex items-center space-x-1">
+                                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                                        <span className="text-green-600 font-medium">Verified Member</span>
+                                    </div>
+                                </div>
+                            )}
                             <div className="text-center">
                                 <button
                                     onClick={() => setIsEditing(true)}
