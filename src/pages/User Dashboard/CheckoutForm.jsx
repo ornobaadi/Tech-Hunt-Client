@@ -3,7 +3,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Tag } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 const CheckoutForm = () => {
@@ -19,11 +19,22 @@ const CheckoutForm = () => {
     const elements = useElements();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Automatically apply coupon from query parameters
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const coupon = queryParams.get('coupon');
+        if (coupon) {
+            setCouponCode(coupon);
+            handleApplyCoupon(coupon);
+        }
+    }, [location.search]);
 
     // Verify coupon code
-    const handleApplyCoupon = async () => {
+    const handleApplyCoupon = async (code = couponCode) => {
         try {
-            const response = await axiosSecure.get(`/verify-coupon/${couponCode}`);
+            const response = await axiosSecure.get(`/verify-coupon/${code}`);
             const coupon = response.data;
             
             const discountedAmount = 50 * (1 - coupon.discountAmount / 100);
@@ -138,7 +149,7 @@ const CheckoutForm = () => {
                     />
                     <button
                         className="btn btn-secondary"
-                        onClick={handleApplyCoupon}
+                        onClick={() => handleApplyCoupon()}
                         disabled={!couponCode}
                     >
                         Apply
