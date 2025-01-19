@@ -3,6 +3,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { GrUserAdmin } from "react-icons/gr";
 import { MdAddModerator } from "react-icons/md";
 import Swal from "sweetalert2";
+import { Shield } from "lucide-react";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -62,7 +63,7 @@ const ManageUsers = () => {
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Role</th>
+                            <th>Subscription</th>
                             <th>Make Moderator</th>
                             <th>Make Admin</th>
                         </tr>
@@ -73,7 +74,17 @@ const ManageUsers = () => {
                                 <th>{index + 1}</th>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
-                                <td>{user.role || 'User'}</td>
+                                <td>
+                                <td>
+                                    {user.membershipStatus === 'active' ? (
+                                        <div className="flex items-center gap-1 text-green-600">
+                                            <span className="font-medium">Premium</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-gray-500">Free</span>
+                                    )}
+                                </td>
+                                </td>
                                 <td>
                                     {
                                         user.role === 'moderator' ? 'Moderator' :

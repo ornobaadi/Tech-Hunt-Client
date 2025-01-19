@@ -1,35 +1,19 @@
 import { useState, useEffect } from "react";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { toast } from 'react-hot-toast';
-import useAuth from "../../hooks/useAuth"
+import useAuth from "../../hooks/useAuth";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { Shield } from 'lucide-react';
 
 const Profile = () => {
-    const { user, updateUserProfile } = useAuth()
+    const { user, updateUserProfile } = useAuth();
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mongoUser, setMongoUser] = useState(null);
     const axiosPublic = useAxiosPublic();
-
-    const [isSubscribed, setIsSubscribed] = useState(false);
-
-    // Add this effect to fetch subscription status
-    useEffect(() => {
-        const fetchSubscriptionStatus = async () => {
-            try {
-                const response = await axiosPublic.get(`/users/${user?.email}`);
-                setIsSubscribed(response.data?.isSubscribed || false);
-            } catch (error) {
-                console.error('Error fetching subscription status:', error);
-            }
-        };
-
-        if (user?.email) {
-            fetchSubscriptionStatus();
-        }
-    }, [user, axiosPublic]);
-
+    
     const [formData, setFormData] = useState({
         name: user?.displayName || "",
         photoURL: user?.photoURL || ""
@@ -41,7 +25,6 @@ const Profile = () => {
             try {
                 const response = await axiosPublic.get(`/users/${user?.email}`);
                 setMongoUser(response.data);
-                // Update form data with MongoDB data if available
                 if (response.data) {
                     setFormData({
                         name: response.data.name || user?.displayName || "",
@@ -66,15 +49,17 @@ const Profile = () => {
         }));
     };
 
+    const handleSubscribe = () => {
+        navigate('/dashboard/payment');
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
+        
         try {
-            // Update profile in Firebase
             await updateUserProfile(formData.name, formData.photoURL);
-
-            // Update in MongoDB
+            
             const updatedUserData = {
                 name: formData.name,
                 photoURL: formData.photoURL,
@@ -83,17 +68,14 @@ const Profile = () => {
             };
 
             if (mongoUser) {
-                // If user exists in MongoDB, update their data
                 await axiosPublic.patch(`/users/${user.email}`, updatedUserData);
             } else {
-                // If user doesn't exist in MongoDB, create new entry
                 await axiosPublic.post('/users', updatedUserData);
             }
-
+            
             toast.success('Profile updated successfully!');
             setIsEditing(false);
-
-            // Refresh MongoDB user data
+            
             const response = await axiosPublic.get(`/users/${user.email}`);
             setMongoUser(response.data);
         } catch (error) {
@@ -102,6 +84,14 @@ const Profile = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     };
 
     return (
@@ -121,10 +111,32 @@ const Profile = () => {
                     ) : (
                         <div className="w-28 h-28 rounded-full border-4 border-blue-300 shadow-lg"></div>
                     )}
-                    <h1 className="text-3xl font-semibold ">
+                    <h1 className="text-3xl font-semibold">
                         Welcome, {isEditing ? formData.name : (mongoUser?.name || user?.displayName || "Guest")}!
                     </h1>
-                    <p className="text-sm ">{user?.email}</p>
+                    <p className="text-sm">{user?.email}</p>
+                    
+                    {/* Membership Status and Subscribe Button */}
+                    <div className="flex flex-col items-center space-y-2 mt-4">
+                        {mongoUser?.membershipStatus === 'active' ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full">
+                                <Shield className="w-5 h-5" />
+                                <span className="font-medium">Premium Member</span>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="px-4 py-1 bg-gray-100 rounded-full text-sm">
+                                    Free Member
+                                </div>
+                                <button
+                                    onClick={handleSubscribe}
+                                    className="px-6 py-2 cursor-pointer bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-md"
+                                >
+                                    Subscribe for $50
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {/* Profile Form */}
@@ -165,14 +177,14 @@ const Profile = () => {
                                             photoURL: mongoUser?.photoURL || user?.photoURL || ""
                                         });
                                     }}
-                                    className="px-4 py-2 text-sm font-medium"
+                                    className="btn"
                                     disabled={loading}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+                                    className="btn btn-info"
                                     disabled={loading}
                                 >
                                     {loading ? "Saving..." : "Save Changes"}
@@ -182,49 +194,44 @@ const Profile = () => {
                     ) : (
                         <div className="space-y-4">
                             <div>
-                                <h3 className="text-lg font-medium ">Your Profile Information</h3>
+                                <h3 className="text-lg font-medium">Your Profile Information</h3>
                                 <ul className="mt-4 space-y-2">
                                     <li className="flex justify-between">
-                                        <span className="">Name:</span>
-                                        <span className="">
+                                        <span>Name:</span>
+                                        <span>
                                             {mongoUser?.name || user?.displayName || "Not provided"}
                                         </span>
                                     </li>
                                     <li className="flex justify-between">
-                                        <span className="">Email:</span>
-                                        <span className="">{user?.email}</span>
+                                        <span>Email:</span>
+                                        <span>{user?.email}</span>
                                     </li>
                                     <li className="flex justify-between">
-                                        <span className="">Last Updated:</span>
-                                        <span className="">
-                                            {mongoUser?.lastUpdated
-                                                ? new Date(mongoUser.lastUpdated).toLocaleDateString()
+                                        <span>Last Updated:</span>
+                                        <span>
+                                            {mongoUser?.lastUpdated 
+                                                ? formatDate(mongoUser.lastUpdated)
                                                 : "Never"}
                                         </span>
                                     </li>
+                                    <li className="flex justify-between">
+                                        <span>Membership Status:</span>
+                                        <span className={mongoUser?.membershipStatus === 'active' ? 'text-green-600 font-medium' : ''}>
+                                            {mongoUser?.membershipStatus === 'active' ? 'Premium' : 'Free Plan'}
+                                        </span>
+                                    </li>
+                                    {mongoUser?.membershipStatus === 'active' && (
+                                        <li className="flex justify-between">
+                                            <span>Member Since:</span>
+                                            <span>{formatDate(mongoUser.subscriptionDate)}</span>
+                                        </li>
+                                    )}
                                 </ul>
                             </div>
-                            {!isSubscribed ? (
-                                <div className="mt-6 text-center">
-                                    <Link
-                                        to="/dashboard/payment"
-                                        className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                                    >
-                                        Subscribe Now - $49.99/month
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="mt-6 flex items-center justify-center space-x-2">
-                                    <div className="flex items-center space-x-1">
-                                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                                        <span className="text-green-600 font-medium">Verified Member</span>
-                                    </div>
-                                </div>
-                            )}
                             <div className="text-center">
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                    className="btn btn-info"
                                 >
                                     Edit Profile
                                 </button>
