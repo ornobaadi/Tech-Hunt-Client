@@ -1,115 +1,225 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { GrUserAdmin } from "react-icons/gr";
-import { MdAddModerator } from "react-icons/md";
+import { Shield, UserCog, XCircle } from "lucide-react";
 import Swal from "sweetalert2";
-import { Shield } from "lucide-react";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
-    const { data: users = [], refetch } = useQuery({
+    const { data: users = [], refetch, isError, isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/users');
-            return res.data;
+            try {
+                const res = await axiosSecure.get('/users');
+                return res.data;
+            } catch (error) {
+                throw new Error('Failed to fetch users');
+            }
         }
-    })
+    });
 
-    const handleMakeAdmin = user => {
-        axiosSecure.patch(`/users/admin/${user._id}`)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.modifiedCount > 0) {
-                    refetch();
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: `${user.name} is admin now`,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            })
+    const handleRoleChange = async (user, newRole) => {
+        if (!user?._id || !user?.name) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid User Data",
+                text: "Unable to process user information."
+            });
+            return;
+        }
+
+        const currentRole = user.role;
+        
+        // Prevent changing own role if admin
+        const currentUserEmail = localStorage.getItem('userEmail'); // Assuming you store current user's email
+        if (user.email === currentUserEmail && user.role === 'admin') {
+            Swal.fire({
+                icon: "error",
+                title: "Operation Not Allowed",
+                text: "You cannot remove your own admin role."
+            });
+            return;
+        }
+
+        // Show confirmation dialog
+        const confirmResult = await Swal.fire({
+            title: 'Are you sure?',
+            text: newRole === currentRole
+                ? `Remove ${currentRole} role from ${user.name}?`
+                : `Make ${user.name} a ${newRole}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!'
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        // Determine endpoint
+        const endpoint = newRole === currentRole ? 
+            `/users/remove-role/${user._id}` : 
+            `/users/${newRole}/${user._id}`;
+
+        try {
+            // Show loading state
+            const loadingToast = Swal.fire({
+                title: 'Processing...',
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false
+            });
+
+            const res = await axiosSecure.patch(endpoint);
+            
+            loadingToast.close();
+
+            if (res.data.modifiedCount > 0) {
+                await refetch(); // Ensure data is refreshed
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: newRole === currentRole ?
+                        `${user.name}'s ${currentRole} role has been removed` :
+                        `${user.name} is now a ${newRole}`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                throw new Error('Role update did not modify any user');
+            }
+        } catch (error) {
+            console.error('Role change error:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Operation Failed",
+                text: error.response?.data?.message || "There was an error updating the user role.",
+                footer: 'Please try again or contact support if the issue persists.'
+            });
+        }
+    };
+
+    // Handle loading state
+    if (isLoading) {
+        return <div className="flex justify-center items-center min-h-screen">
+            <span className="loading loading-spinner loading-lg"></span>
+        </div>;
     }
 
-    const handleMakeModerator = user => {
-        axiosSecure.patch(`/users/moderator/${user._id}`)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.modifiedCount > 0) {
-                    refetch();
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: `${user.name} is moderator now`,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            })
+    // Handle error state
+    if (isError) {
+        return <div className="flex justify-center items-center min-h-screen">
+            <div className="text-center">
+                <h2 className="text-2xl text-error mb-2">Error Loading Users</h2>
+                <button 
+                    className="btn btn-primary"
+                    onClick={() => refetch()}
+                >
+                    Try Again
+                </button>
+            </div>
+        </div>;
     }
 
     return (
-        <div>
-            <div className="flex justify-evenly text-center my-10">
-                <h2 className="text-4xl">All Users: </h2>
-                <h2 className="text-4xl">Total Users: {users.length} </h2>
-            </div>
-            <div className="overflow-x-auto">
-                <table className="table table-zebra">
-                    {/* head */}
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Subscription</th>
-                            <th>Make Moderator</th>
-                            <th>Make Admin</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            users.map((user, index) => <tr key={user._id}>
-                                <th>{index + 1}</th>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>
-                                <td>
-                                    {user.membershipStatus === 'active' ? (
-                                        <div className="flex items-center gap-1 text-green-600">
-                                            <span className="font-medium">Premium</span>
+        <div className="p-4 max-w-7xl mx-auto">
+            <div className="bg-base-100 rounded-lg shadow-lg p-6 mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                    <h2 className="text-3xl font-bold text-primary">Manage Users</h2>
+                    <div className="stats shadow">
+                        <div className="stat">
+                            <div className="stat-title">Total Users</div>
+                            <div className="stat-value text-primary">{users.length}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                    <table className="table w-full">
+                        <thead className="bg-base-200">
+                            <tr>
+                                <th className="rounded-tl-lg">#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Role Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user, index) => (
+                                <tr key={user._id} className="hover:bg-base-100">
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <div className="font-semibold">{user.name}</div>
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <div className="flex items-center gap-2">
+                                            {user.membershipStatus === 'active' ? (
+                                                <span className="badge badge-success gap-1">
+                                                    Premium
+                                                </span>
+                                            ) : (
+                                                <span className="badge badge-ghost gap-1">
+                                                    Free
+                                                </span>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <span className="text-gray-500">Free</span>
-                                    )}
-                                </td>
-                                </td>
-                                <td>
-                                    {
-                                        user.role === 'moderator' ? 'Moderator' :
-                                        user.role === 'admin' ? 'Admin' :
-                                        <button
-                                            onClick={() => handleMakeModerator(user)}
-                                            className="btn">
-                                            <MdAddModerator />
-                                        </button>
-                                    }
-                                </td>
-                                <td>
-                                    {
-                                        user.role === 'admin' ? 'Admin' :
-                                        <button
-                                            onClick={() => handleMakeAdmin(user)}
-                                            className="btn">
-                                            <GrUserAdmin />
-                                        </button>
-                                    }
-                                </td>
-                            </tr>)
-                        }
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleRoleChange(user, 'moderator')}
+                                                className={`btn btn-sm ${
+                                                    user.role === 'moderator' 
+                                                        ? 'btn-error' 
+                                                        : 'btn-outline'
+                                                }`}
+                                                disabled={user.role === 'admin' || user.email === localStorage.getItem('userEmail')}
+                                            >
+                                                {user.role === 'moderator' ? (
+                                                    <>
+                                                        <XCircle className="h-4 w-4" />
+                                                        Remove Mod
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Shield className="h-4 w-4" />
+                                                        Make Mod
+                                                    </>
+                                                )}
+                                            </button>
+
+                                            <button
+                                                onClick={() => handleRoleChange(user, 'admin')}
+                                                className={`btn btn-sm ${
+                                                    user.role === 'admin' 
+                                                        ? 'btn-error' 
+                                                        : 'btn-outline'
+                                                }`}
+                                                disabled={user.email === localStorage.getItem('userEmail')}
+                                            >
+                                                {user.role === 'admin' ? (
+                                                    <>
+                                                        <XCircle className="h-4 w-4" />
+                                                        Remove Admin
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <UserCog className="h-4 w-4" />
+                                                        Make Admin
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

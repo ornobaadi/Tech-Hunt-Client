@@ -60,11 +60,12 @@ A dynamic platform for discovering and sharing tech products like web apps, AI t
 
 ## 🛠️ Technologies Used
 
-- **Frontend**: React.js, Tailwind CSS, Daisy UI (with customizations)
+- **Frontend**: React.js, Tailwind CSS 4 (beta), Daisy UI 5 (beta)
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Authentication**: Firebase
-- **Other Tools**: JWT, React-Toastify, react-tag-input
+- **Deploymeny**: Vercel
+- **Other Tools**: JWT, React-Toastify, react-tag-input, 
 
 ---
 
