@@ -1,29 +1,46 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { WithContext as ReactTags } from 'react-tag-input';
-import useAuth from '../../hooks/useAuth';
-import useAxiosPublic from '../../hooks/useAxiosPublic';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { Tag } from 'lucide-react';
+import useAuth from "../../hooks/useAuth"
+import useAxiosPublic from '../../hooks/useAxiosPublic';
 
-const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const AddProduct = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { user } = useAuth();
-    const { register, handleSubmit, setValue, reset } = useForm({
+    const axiosPublic = useAxiosPublic();
+    const [isLoading, setIsLoading] = useState(false);
+    const [userStatus, setUserStatus] = useState(null);
+    const [tags, setTags] = useState([]);
+    const [previewImage, setPreviewImage] = useState('');
+    const [currentTag, setCurrentTag] = useState('');
+
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
             ownerName: user?.displayName || '',
             ownerEmail: user?.email || '',
             ownerImage: user?.photoURL || '',
             tags: [],
-            productImage: ''
+            productImage: null
         }
     });
 
-    const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+    // Check user's membership status
+    useEffect(() => {
+        const checkUserStatus = async () => {
+            try {
+                const response = await axiosPublic.get(`/users/${user?.email}`);
+                setUserStatus(response.data);
+            } catch (error) {
+                console.error('Error fetching user status:', error);
+            }
+        };
 
-    const [tags, setTags] = React.useState([]);
-    const [previewImage, setPreviewImage] = React.useState('');
+        if (user?.email) {
+            checkUserStatus();
+        }
+    }, [user, axiosPublic]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -31,67 +48,99 @@ const AddProduct = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewImage(reader.result);
-                setValue('productImage', file);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleAddTag = (tag) => {
-        setTags([...tags, tag]);
-        setValue('tags', [...tags, tag]);
+    const handleAddTag = () => {
+        if (currentTag.trim() && !tags.includes(currentTag.trim())) {
+            const newTags = [...tags, currentTag.trim()];
+            setTags(newTags);
+            setValue('tags', newTags);
+            setCurrentTag('');
+        }
     };
 
-    const handleDeleteTag = (i) => {
-        const newTags = tags.filter((_, index) => index !== i);
+    const handleRemoveTag = (tagToRemove) => {
+        const newTags = tags.filter(tag => tag !== tagToRemove);
         setTags(newTags);
         setValue('tags', newTags);
     };
 
-
-    const axiosPublic = useAxiosPublic();
     const onSubmit = async (data) => {
-        console.log('Form submitted:', data);
-        // image upload to imgbb then get url
-        const imageFile = { image: data.productImage[0] }
-        const res = await axiosPublic.post(image_hosting_api, imageFile, {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        });
-        if (res.data.success) {
-            // now send the product image url 
-            const productItem = {
-                productName: data.productName,
-                productImage: res.data.data.display_url,
-                description: data.description,
-                ownerName: data.ownerName,
-                ownerImage: data.ownerImage,
-                ownerEmail: data.ownerEmail,
-                externalLink: data.externalLink,
-                tags: data.tags,
-                upvotes: 0,
-                timestamp: new Date().toISOString(),
-            };
+        try {
+            setIsLoading(true);
 
-            const productRes = await axiosPublic.post('/products', productItem);
-            console.log(productRes.data);
-            if (productRes.data.insertedId) {
-                // show success popup
-                reset();
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: `${data.productName} added to Products`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
-                    navigate('/dashboard/myProducts');
-                }, 1500);
+            // First upload the image to ImgBB
+            const imageFile = { image: data.productImage[0] };
+            const imgbbFormData = new FormData();
+            imgbbFormData.append('image', data.productImage[0]);
+
+            const imgbbResponse = await axiosPublic.post(
+                `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_HOSTING_KEY}`,
+                imgbbFormData
+            );
+
+            if (imgbbResponse.data.success) {
+                const productItem = {
+                    productName: data.productName,
+                    productImage: imgbbResponse.data.data.display_url,
+                    description: data.description,
+                    ownerName: user.displayName,
+                    ownerImage: user.photoURL,
+                    ownerEmail: user.email,
+                    externalLink: data.externalLink,
+                    tags: tags,
+                    status: 'pending',
+                    upvotes: 0,
+                    timestamp: new Date().toISOString(),
+                };
+
+                const productRes = await axiosPublic.post('/products', productItem);
+                
+                if (productRes.data.insertedId) {
+                    reset();
+                    setPreviewImage('');
+                    setTags([]);
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `${data.productName} added successfully!`,
+                        text: "Your product is pending moderator approval",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    setTimeout(() => {
+                        navigate('/dashboard/myProducts');
+                    }, 2000);
+                }
             }
+        } catch (error) {
+            if (error.response?.status === 403) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Product Limit Reached',
+                    text: 'Free users can only add one product. Would you like to upgrade to premium?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Upgrade Now',
+                    cancelButtonText: 'Maybe Later'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate('/dashboard/payment');
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to add product. Please try again.'
+                });
+            }
+            console.error('Error adding product:', error);
+        } finally {
+            setIsLoading(false);
         }
-        console.log(res.data);
     };
 
     return (
@@ -99,6 +148,24 @@ const AddProduct = () => {
             <div className="card bg-base-100 shadow-xl">
                 <div className="card-body p-6 md:p-8">
                     <h2 className="text-2xl font-bold text-center mb-8">Add New Product</h2>
+
+                    {/* Membership Status Warning */}
+                    {(!userStatus?.membershipStatus || userStatus.membershipStatus !== 'active') && (
+                        <div className="alert alert-warning shadow-lg mb-6">
+                            <div className="flex items-center gap-2">
+                                <Tag className="h-5 w-5" />
+                                <div>
+                                    <span className="font-medium">Free User Notice:</span> You can add only one product.
+                                    <button 
+                                        className="btn btn-link btn-sm"
+                                        onClick={() => navigate('/dashboard/payment')}
+                                    >
+                                        Upgrade to Premium
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         {/* Product Name */}
@@ -108,12 +175,14 @@ const AddProduct = () => {
                                 <span className="label-text-alt text-base-content/70">(Required)</span>
                             </label>
                             <input
-                                required
                                 type="text"
                                 placeholder="Enter product name"
                                 className="input input-bordered w-full"
-                                {...register('productName')}
+                                {...register('productName', { required: true })}
                             />
+                            {errors.productName && (
+                                <span className="text-error text-sm mt-1">Product name is required</span>
+                            )}
                         </div>
 
                         {/* Product Image */}
@@ -123,20 +192,27 @@ const AddProduct = () => {
                                 <span className="label-text-alt text-base-content/70">(Required)</span>
                             </label>
                             <input
-                                required
                                 type="file"
                                 accept="image/*"
                                 className="file-input file-input-bordered w-full"
+                                {...register('productImage', { required: true })}
                                 onChange={handleImageChange}
-                                {...register('productImage')}
                             />
+                            {errors.productImage && (
+                                <span className="text-error text-sm mt-1">Product image is required</span>
+                            )}
                             {previewImage && (
                                 <div className="mt-4 flex justify-center">
-                                    <img src={previewImage} alt="Preview" className="w-40 h-40 object-cover rounded-lg shadow-md" />
+                                    <img 
+                                        src={previewImage} 
+                                        alt="Preview" 
+                                        className="w-40 h-40 object-cover rounded-lg shadow-md" 
+                                    />
                                 </div>
                             )}
                         </div>
 
+                        {/* Description */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text font-medium">Description</span>
@@ -196,49 +272,81 @@ const AddProduct = () => {
                             <label className="label">
                                 <span className="label-text font-medium">Tags</span>
                             </label>
-                            <ReactTags
-                                tags={tags.map((tag, index) => ({
-                                    id: index.toString(),
-                                    text: tag
-                                }))}
-                                handleDelete={handleDeleteTag}
-                                handleAddition={(tag) => handleAddTag(tag.text)}
-                                inputFieldPosition="bottom"
-                                classNames={{
-                                    tags: 'flex flex-wrap gap-2 mt-2',
-                                    tag: 'badge badge-primary badge-lg gap-2 mr-2',
-                                    tagInput: 'input input-bordered w-full mt-2',
-                                    remove: 'cursor-pointer hover:text-error'
-                                }}
-                                placeholder="Type and press enter to add tags"
-                            />
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={currentTag}
+                                    onChange={(e) => setCurrentTag(e.target.value)}
+                                    placeholder="Add tags..."
+                                    className="input input-bordered flex-1"
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            handleAddTag();
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={handleAddTag}
+                                >
+                                    Add Tag
+                                </button>
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {tags.map((tag, index) => (
+                                    <div key={index} className="badge badge-primary gap-2">
+                                        {tag}
+                                        <button
+                                            type="button"
+                                            className="btn btn-ghost btn-xs"
+                                            onClick={() => handleRemoveTag(tag)}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
-                        {/* External Links */}
+                        {/* External Link */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text font-medium">External Link</span>
+                                <span className="label-text-alt text-base-content/70">(Optional)</span>
                             </label>
-                            <label className="input-group">
-                                <input
-                                    type="url"
-                                    placeholder="https://example.com"
-                                    className="input input-bordered w-full"
-                                    {...register('externalLink', {
-                                        pattern: {
-                                            value: /^(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$/,
-                                        }
-                                    })}
-                                />
-                            </label>
+                            <input
+                                type="url"
+                                placeholder="https://example.com"
+                                className="input input-bordered w-full"
+                                {...register('externalLink', {
+                                    pattern: {
+                                        value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                                        message: "Please enter a valid URL"
+                                    }
+                                })}
+                            />
+                            {errors.externalLink && (
+                                <span className="text-error text-sm mt-1">{errors.externalLink.message}</span>
+                            )}
                         </div>
 
                         {/* Submit Button */}
-                        <div className="mt-8">
-                            <button type="submit" className="btn btn-primary w-full">
-                                Add Product
-                            </button>
-                        </div>
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-full"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <span className="loading loading-spinner"></span>
+                                    Processing...
+                                </>
+                            ) : (
+                                'Add Product'
+                            )}
+                        </button>
                     </form>
                 </div>
             </div>

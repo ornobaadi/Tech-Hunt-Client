@@ -4,7 +4,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 import useUpvote from "../../hooks/useUpvote";
 
 const Navbar = () => {
-    const [upvote]  = useUpvote();
+    const [upvote] = useUpvote();
     const { user, logOut } = useContext(AuthContext);
     const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
 
@@ -23,6 +23,13 @@ const Navbar = () => {
             .then(() => { })
             .catch(error => console.log(error));
     }
+
+    // Dashboard route based on the user's role
+    const getDashboardRoute = () => {
+        if (user?.role === "admin") return "/dashboard/statistics";
+        if (user?.role === "moderator") return "/dashboard/reviewQueue";
+        return "/dashboard/profile"; // Default for regular users
+    };
 
     const links =
         <>
@@ -81,9 +88,9 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end gap-5">
-                    <Link to="/dashboard/upvotes" className="btn">
-                        Upvotes <div className="badge badge-sm badge-secondary">{upvote.length}</div>
-                    </Link>
+                <Link to="/dashboard/upvotes" className="btn">
+                    Upvotes <div className="badge badge-sm badge-secondary">{upvote.length}</div>
+                </Link>
                 <label className="swap swap-rotate">
                     <input
                         type="checkbox"
@@ -123,14 +130,13 @@ const Navbar = () => {
                                         <p className="cursor-default">{user?.displayName || "User"}</p>
                                     </li>
                                     <li>
-                                        <Link to="/dashboard">Dashboard</Link>
+                                        <Link to={getDashboardRoute()}>Dashboard</Link>
                                     </li>
                                     <li>
                                         <button onClick={handleLogOut}>Logout</button>
                                     </li>
                                 </ul>
                             </div>
-
 
 
                         </> : <>
