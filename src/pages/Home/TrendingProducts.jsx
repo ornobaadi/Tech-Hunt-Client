@@ -6,7 +6,7 @@ const TrendingProducts = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/products')
+        fetch('https://tech-hunt-server-two.vercel.app/products')
             .then(res => res.json())
             .then(data => {
                 const trending = data.sort((a, b) => b.upvotes - a.upvotes);

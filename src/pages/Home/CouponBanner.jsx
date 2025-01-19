@@ -12,7 +12,7 @@ const CouponsPage = () => {
     useEffect(() => {
         const fetchCoupons = async () => {
             try {
-                const response = await fetch("http://localhost:5000/coupons");
+                const response = await fetch("https://tech-hunt-server-two.vercel.app/coupons");
                 const data = await response.json();
                 setCoupons(data);
                 setLoading(false);

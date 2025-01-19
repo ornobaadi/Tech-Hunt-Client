@@ -18,8 +18,8 @@ import { GrTechnology } from "react-icons/gr";
 const Dashboard = () => {
     const [upvote] = useUpvote();
     const [isAdmin] = useAdmin();
-    const [isModerator] = useModerator(); // Add moderator check
-    const [isCollapsed, setIsCollapsed] = useState(false); // State for sidebar collapse
+    const [isModerator] = useModerator();
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     return (
         <div className="flex">
