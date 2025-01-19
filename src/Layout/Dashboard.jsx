@@ -7,90 +7,165 @@ import useUpvote from "../hooks/useUpvote";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { MdManageAccounts } from "react-icons/md";
 import { RiCoupon2Fill } from "react-icons/ri";
-import { MdQueue, MdReportProblem } from "react-icons/md"; // Added new icons
+import { MdQueue, MdReportProblem } from "react-icons/md";
 import useAdmin from "../hooks/useAdmin";
-import useModerator from "../hooks/useModerator"; // Import the moderator hook
+import useModerator from "../hooks/useModerator";
+import { useState } from "react";
+import { TbLayoutSidebarRightCollapse } from "react-icons/tb";
+import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { GrTechnology } from "react-icons/gr";
 
 const Dashboard = () => {
     const [upvote] = useUpvote();
     const [isAdmin] = useAdmin();
     const [isModerator] = useModerator(); // Add moderator check
+    const [isCollapsed, setIsCollapsed] = useState(false); // State for sidebar collapse
 
     return (
         <div className="flex">
             {/* Sidebar */}
-            <div className="w-80 min-h-screen bg-slate-600 text-white">
-                <div className="flex flex-col justify-center items-center mb-10">
-                    <img className="w-32" src="/logo 2.png" alt="" />
-                    <p className="font-bold text-xl">
-                        Tech Hunt
-                    </p>
-                </div>
-                <ul className="menu px-5 w-full *:text-lg">
-                    {
-                        isAdmin ? (
-                            <>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/statistics">
-                                        <IoStatsChartSharp />
-                                        Statistics</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/manageUsers">
-                                        <MdManageAccounts />
-                                        Manage Users</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/manageCoupons">
-                                        <RiCoupon2Fill />
-                                        Manage Coupons</NavLink>
-                                </li>
-                            </>
-                        ) : isModerator ? (
-                            <>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/reviewQueue">
-                                        <MdQueue />
-                                        Product Review Queue</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/reportedProducts">
-                                        <MdReportProblem />
-                                        Reported Products</NavLink>
-                                </li>
-                            </>
-                        ) : (
-                            <>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/profile">
-                                        <FaUser />
-                                        My Profile</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/upvotes">
-                                        <FaCircleChevronUp />
-                                        My Upvotes ({upvote.length})</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/addProduct">
-                                        <IoIosAddCircle />
-                                        Add Product</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="flex gap-5" to="/dashboard/myProducts">
-                                        <LuBox />
-                                        My Products</NavLink>
-                                </li>
-                            </>
-                        )
+            <div
+                className={`transition-all duration-300 bg-slate-600 text-white ${isCollapsed ? "w-20" : "w-80"
+                    } min-h-screen`}
+            >
+                <button
+                    className="text-white ml-5 mt-4 text-4xl"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    {isCollapsed ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />
                     }
+                </button>
+                <div className="flex flex-col items-center mb-10">
+
+                    {!isCollapsed && (
+                        <>
+                            <img className="w-32 mt-4" src="/logo 2.png" alt="" />
+                            <p className="font-bold text-xl">Tech Hunt</p>
+                        </>
+                    )}
+                </div>
+                <ul className="menu px-5 w-full text-lg">
+                    {isAdmin ? (
+                        <>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/statistics"
+                                >
+                                    <IoStatsChartSharp />
+                                    {!isCollapsed && "Statistics"}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/manageUsers"
+                                >
+                                    <MdManageAccounts />
+                                    {!isCollapsed && "Manage Users"}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/manageCoupons"
+                                >
+                                    <RiCoupon2Fill />
+                                    {!isCollapsed && "Manage Coupons"}
+                                </NavLink>
+                            </li>
+                        </>
+                    ) : isModerator ? (
+                        <>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/reviewQueue"
+                                >
+                                    <MdQueue />
+                                    {!isCollapsed && "Product Review Queue"}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/reportedProducts"
+                                >
+                                    <MdReportProblem />
+                                    {!isCollapsed && "Reported Products"}
+                                </NavLink>
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/profile"
+                                >
+                                    <FaUser />
+                                    {!isCollapsed && "My Profile"}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/upvotes"
+                                >
+                                    <FaCircleChevronUp />
+                                    {!isCollapsed && `My Upvotes (${upvote.length})`}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/addProduct"
+                                >
+                                    <IoIosAddCircle />
+                                    {!isCollapsed && "Add Product"}
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                        }`}
+                                    to="/dashboard/myProducts"
+                                >
+                                    <LuBox />
+                                    {!isCollapsed && "My Products"}
+                                </NavLink>
+                            </li>
+                        </>
+                    )}
                     {/* Shared Navlinks */}
                     <div className="divider"></div>
                     <li>
-                        <NavLink className="flex gap-5" to="/"><FaHome />Home</NavLink>
+                        <NavLink
+                            className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                }`}
+                            to="/"
+                        >
+                            <FaHome />
+                            {!isCollapsed && "Home"}
+                        </NavLink>
                     </li>
                     <li>
-                        <NavLink className="flex gap-5" to="/products"><FaHome />Products</NavLink>
+                        <NavLink
+                            className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
+                                }`}
+                            to="/products"
+                        >
+                            <GrTechnology />
+                            {!isCollapsed && "Products"}
+                        </NavLink>
                     </li>
                 </ul>
             </div>
