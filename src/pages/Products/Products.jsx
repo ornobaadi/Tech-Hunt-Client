@@ -55,7 +55,6 @@ const Products = () => {
     const handlePageClick = (event) => {
         const newOffset = (event.selected * ITEMS_PER_PAGE) % products.length;
         setItemOffset(newOffset);
-        // Scroll to top smoothly when page changes
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -107,7 +106,7 @@ const Products = () => {
                                     marginPagesDisplayed={2}
                                     pageCount={pageCount}
                                     renderOnZeroPageCount={null}
-                                    containerClassName="flex items-center justify-center space-x-2 mt-8 mb-4"
+                                    containerClassName="flex items-center justify-center space-x-1 mt-8 mb-4"
                                     pageClassName="block border border-gray-200 rounded hover:bg-gray-100 transition-colors"
                                     pageLinkClassName="block px-3 py-2 text-sm text-gray-700 hover:text-gray-900"
                                     previousClassName="block border border-gray-200 rounded hover:bg-gray-100 transition-colors"

@@ -307,9 +307,7 @@ const ProductDetails = () => {
                                                 className="flex gap-1"
                                             />
                                         </div>
-                                        <div className="mt-1">
-
-                                        </div>
+                                        <div className="mt-1"></div>
                                     </div>
                                     <span className="text-sm text-gray-500 ml-auto">
                                         {new Date(review.timestamp).toLocaleDateString()}

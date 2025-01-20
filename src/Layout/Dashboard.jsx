@@ -11,167 +11,112 @@ import { MdQueue, MdReportProblem } from "react-icons/md";
 import useAdmin from "../hooks/useAdmin";
 import useModerator from "../hooks/useModerator";
 import { useState } from "react";
-import { TbLayoutSidebarRightCollapse } from "react-icons/tb";
-import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { TbLayoutSidebarRightCollapse, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { GrTechnology } from "react-icons/gr";
 
 const Dashboard = () => {
     const [upvote] = useUpvote();
     const [isAdmin] = useAdmin();
     const [isModerator] = useModerator();
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const handleNavClick = () => {
+        setIsSidebarOpen(false);
+    };
+
+    const NavItem = ({ to, icon, children }) => (
+        <li>
+            <NavLink
+                className="flex gap-5 items-center"
+                to={to}
+                onClick={handleNavClick}
+            >
+                {icon}
+                <span>{children}</span>
+            </NavLink>
+        </li>
+    );
 
     return (
-        <div className="flex">
+        <div className="min-h-screen bg-gray-50">
             {/* Sidebar */}
             <div
-                className={`transition-all duration-300 bg-gray-900 text-white ${isCollapsed ? "w-20" : "w-80"
-                    } min-h-screen`}
+                className={`fixed top-0 left-0 transition-all duration-300 bg-gray-900 text-white w-80
+                    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 min-h-screen z-50`}
             >
-                <button
-                    className="text-white ml-5 mt-4 text-4xl cursor-pointer"
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                >
-                    {isCollapsed ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />
-                    }
-                </button>
                 <div className="flex flex-col items-center mb-10">
-
-                    {!isCollapsed && (
-                        <>
-                            <img className="w-32 mt-4" src="/logo 2.png" alt="" />
-                            <p className="font-bold text-xl">Tech Hunt</p>
-                        </>
-                    )}
+                    <img className="w-32 mt-4" src="/logo 2.png" alt="" />
+                    <p className="font-bold text-xl">Tech Hunt</p>
                 </div>
                 <ul className="menu px-5 w-full text-lg">
                     {isAdmin ? (
                         <>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/statistics"
-                                >
-                                    <IoStatsChartSharp />
-                                    {!isCollapsed && "Statistics"}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/manageUsers"
-                                >
-                                    <MdManageAccounts />
-                                    {!isCollapsed && "Manage Users"}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/manageCoupons"
-                                >
-                                    <RiCoupon2Fill />
-                                    {!isCollapsed && "Manage Coupons"}
-                                </NavLink>
-                            </li>
+                            <NavItem to="/dashboard/statistics" icon={<IoStatsChartSharp />}>
+                                Statistics
+                            </NavItem>
+                            <NavItem to="/dashboard/manageUsers" icon={<MdManageAccounts />}>
+                                Manage Users
+                            </NavItem>
+                            <NavItem to="/dashboard/manageCoupons" icon={<RiCoupon2Fill />}>
+                                Manage Coupons
+                            </NavItem>
                         </>
                     ) : isModerator ? (
                         <>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/reviewQueue"
-                                >
-                                    <MdQueue />
-                                    {!isCollapsed && "Product Review Queue"}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/reportedProducts"
-                                >
-                                    <MdReportProblem />
-                                    {!isCollapsed && "Reported Products"}
-                                </NavLink>
-                            </li>
+                            <NavItem to="/dashboard/reviewQueue" icon={<MdQueue />}>
+                                Product Review Queue
+                            </NavItem>
+                            <NavItem to="/dashboard/reportedProducts" icon={<MdReportProblem />}>
+                                Reported Products
+                            </NavItem>
                         </>
                     ) : (
                         <>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/profile"
-                                >
-                                    <FaUser />
-                                    {!isCollapsed && "My Profile"}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/upvotes"
-                                >
-                                    <FaCircleChevronUp />
-                                    {!isCollapsed && `My Upvotes (${upvote.length})`}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/addProduct"
-                                >
-                                    <IoIosAddCircle />
-                                    {!isCollapsed && "Add Product"}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                        }`}
-                                    to="/dashboard/myProducts"
-                                >
-                                    <LuBox />
-                                    {!isCollapsed && "My Products"}
-                                </NavLink>
-                            </li>
+                            <NavItem to="/dashboard/profile" icon={<FaUser />}>
+                                My Profile
+                            </NavItem>
+                            <NavItem to="/dashboard/upvotes" icon={<FaCircleChevronUp />}>
+                                My Upvotes ({upvote.length})
+                            </NavItem>
+                            <NavItem to="/dashboard/addProduct" icon={<IoIosAddCircle />}>
+                                Add Product
+                            </NavItem>
+                            <NavItem to="/dashboard/myProducts" icon={<LuBox />}>
+                                My Products
+                            </NavItem>
                         </>
                     )}
-                    {/* Shared Navlinks */}
                     <div className="divider"></div>
-                    <li>
-                        <NavLink
-                            className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                }`}
-                            to="/"
-                        >
-                            <FaHome />
-                            {!isCollapsed && "Home"}
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            className={`flex gap-5 items-center ${isCollapsed ? "justify-center" : ""
-                                }`}
-                            to="/products"
-                        >
-                            <GrTechnology />
-                            {!isCollapsed && "Products"}
-                        </NavLink>
-                    </li>
+                    <NavItem to="/" icon={<FaHome />}>
+                        Home
+                    </NavItem>
+                    <NavItem to="/products" icon={<GrTechnology />}>
+                        Products
+                    </NavItem>
                 </ul>
             </div>
-            {/* Dashboard Content */}
-            <div className="flex-1 p-8">
-                <Outlet></Outlet>
+
+            {/* Mobile Toggle Button */}
+            <button
+                className="text-white p-3 fixed top-4 left-4 z-50 bg-gray-800 rounded-md md:hidden"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+                {isSidebarOpen ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />}
+            </button>
+
+            {/* Glass Effect Overlay for mobile */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 backdrop-blur-sm bg-white/30 z-40 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                ></div>
+            )}
+
+            {/* Dashboard Content with max-width container */}
+            <div className="md:ml-80 transition-all duration-300">
+                <div className="max-w-screen-xl mx-auto p-4 md:p-8">
+                    <Outlet />
+                </div>
             </div>
         </div>
     );

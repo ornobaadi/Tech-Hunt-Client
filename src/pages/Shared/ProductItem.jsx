@@ -43,7 +43,6 @@ const ProductItem = ({ product }) => {
 
     const { date, time } = timestamp ? formatDateTime(timestamp) : { date: 'N/A', time: 'N/A' };
 
-    // Initialize isUpvoted state based on upvote data
     useEffect(() => {
         if (upvote) {
             setIsUpvoted(upvote.some(item => item.productId === _id));
@@ -57,7 +56,6 @@ const ProductItem = ({ product }) => {
             setIsUpvoting(true);
             
             if (isUpvoted) {
-                // Optimistically update UI
                 setIsUpvoted(false);
                 setCurrentUpvotes(prev => prev - 1);
 
@@ -77,7 +75,6 @@ const ProductItem = ({ product }) => {
                     });
                 }
             } else {
-                // Optimistically update UI
                 setIsUpvoted(true);
                 setCurrentUpvotes(prev => prev + 1);
 
@@ -92,7 +89,6 @@ const ProductItem = ({ product }) => {
                 const res = await axiosSecure.post('/upvotes', upvoteItem);
                 
                 if (res.data.insertedId) {
-                    // Silently refresh data in background
                     Promise.all([refetch(), refetchProducts()]);
                     
                     Swal.fire({

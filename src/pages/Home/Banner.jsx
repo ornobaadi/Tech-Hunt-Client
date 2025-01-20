@@ -5,7 +5,7 @@ const Banner = () => {
     return (
         <div>
             <div
-                className="hero min-h-[700px] rounded-xl my-2"
+                className="hero min-h-[500px] lg:min-h-[700px] rounded-md my-2"
                 style={{
                     backgroundImage: `url(${banner})`,
                     backgroundSize: "cover",
@@ -15,7 +15,7 @@ const Banner = () => {
                 <div className="hero-overlay rounded-2xl bg-opacity-60"></div>
                 <div className="hero-content text-neutral-content text-center">
                     <div className="max-w-md">
-                        <h1 className="mb-5 text-4xl font-bold">
+                        <h1 className="mb-5 text-2xl md:text-4xl font-bold">
                             Discover & Share the Best Products in Tech
                         </h1>
                         <p className="mb-10">

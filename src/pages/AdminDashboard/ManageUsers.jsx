@@ -31,7 +31,7 @@ const ManageUsers = () => {
         const currentRole = user.role;
         
         // Prevent changing own role if admin
-        const currentUserEmail = localStorage.getItem('userEmail'); // Assuming you store current user's email
+        const currentUserEmail = localStorage.getItem('userEmail');
         if (user.email === currentUserEmail && user.role === 'admin') {
             Swal.fire({
                 icon: "error",
@@ -78,7 +78,7 @@ const ManageUsers = () => {
             loadingToast.close();
 
             if (res.data.modifiedCount > 0) {
-                await refetch(); // Ensure data is refreshed
+                await refetch();
                 Swal.fire({
                     position: "top-end",
                     icon: "success",

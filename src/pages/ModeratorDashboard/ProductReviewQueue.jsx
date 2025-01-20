@@ -57,7 +57,7 @@ const ProductReviewQueue = () => {
         try {
             await axiosSecure.patch(`/products/status/${id}`, {
                 status: 'rejected',
-                featured: false // Remove featured status when rejecting
+                featured: false
             });
             Swal.fire({
                 position: "center",

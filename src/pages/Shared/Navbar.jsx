@@ -28,7 +28,7 @@ const Navbar = () => {
     const getDashboardRoute = () => {
         if (user?.role === "admin") return "/dashboard/statistics";
         if (user?.role === "moderator") return "/dashboard/reviewQueue";
-        return "/dashboard/profile"; // Default for regular users
+        return "/dashboard/profile";
     };
 
     const links =
@@ -88,7 +88,7 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end gap-5">
-                <Link to="/dashboard/upvotes" className="btn">
+                <Link to="/dashboard/upvotes" className="btn hidden md:flex">
                     Upvotes <div className="badge badge-sm rounded-full bg-[#C836E9] text-white">{upvote.length}</div>
                 </Link>
                 <label className="swap swap-rotate">

@@ -28,17 +28,18 @@ const CouponsPage = () => {
     if (loading) return <div>Loading coupons...</div>;
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold text-center mb-4">Available Coupons</h1>
+        <div className="text-center my-12">
+            <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Coupons</h4>
+            <h2 className="text-2xl lg:text-4xl font-bold text-base-content mb-10">Available Coupons</h2>
             <Swiper
                 modules={[Pagination]}
                 spaceBetween={20}
-                slidesPerView={1.2} // Default for small screens
+                slidesPerView={1.2}
                 pagination={{ clickable: true }}
                 breakpoints={{
-                    640: { slidesPerView: 1.5 }, // Small tablets
-                    768: { slidesPerView: 2 }, // Tablets
-                    1024: { slidesPerView: 3.5 }, // Laptops and larger screens
+                    640: { slidesPerView: 1.5 },
+                    768: { slidesPerView: 2 }, 
+                    1024: { slidesPerView: 3.5 },
                 }}
             >
                 {coupons.map((coupon) => (
