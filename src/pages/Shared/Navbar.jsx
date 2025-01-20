@@ -89,7 +89,7 @@ const Navbar = () => {
             </div>
             <div className="navbar-end gap-5">
                 <Link to="/dashboard/upvotes" className="btn">
-                    Upvotes <div className="badge badge-sm badge-secondary">{upvote.length}</div>
+                    Upvotes <div className="badge badge-sm rounded-full bg-[#C836E9] text-white">{upvote.length}</div>
                 </Link>
                 <label className="swap swap-rotate">
                     <input
@@ -127,7 +127,7 @@ const Navbar = () => {
                                 </button>
                                 <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
                                     <li className="">
-                                        <p className="cursor-default">{user?.displayName || "User"}</p>
+                                        <p className="btn btn-block border-none">{user?.displayName || "User"}</p>
                                     </li>
                                     <li>
                                         <Link to={getDashboardRoute()}>Dashboard</Link>

@@ -43,7 +43,7 @@ const CouponsPage = () => {
             >
                 {coupons.map((coupon) => (
                     <SwiperSlide key={coupon.id}>
-                        <div className="card bg-info-content text-primary-content shadow-lg mx-auto max-w-[90%] sm:max-w-xs md:max-w-sm">
+                        <div className="glass card bg-info-content text-primary-content shadow-lg mx-auto max-w-[90%] sm:max-w-xs md:max-w-sm">
                             <div className="card-body p-8">
                                 <h2 className="card-title text-lg md:text-xl">{coupon.code}</h2>
                                 <p className="text-sm md:text-base">

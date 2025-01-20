@@ -29,7 +29,7 @@ const Dashboard = () => {
                     } min-h-screen`}
             >
                 <button
-                    className="text-white ml-5 mt-4 text-4xl"
+                    className="text-white ml-5 mt-4 text-4xl cursor-pointer"
                     onClick={() => setIsCollapsed(!isCollapsed)}
                 >
                     {isCollapsed ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />

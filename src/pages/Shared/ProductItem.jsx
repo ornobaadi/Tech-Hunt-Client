@@ -18,6 +18,8 @@ const ProductItem = ({ product }) => {
     const [upvote, refetch] = useUpvote();
     const [, refetchProducts] = useProducts();
     const [currentUpvotes, setCurrentUpvotes] = useState(product.upvotes || 0);
+    const [isUpvoted, setIsUpvoted] = useState(false);
+    const [isUpvoting, setIsUpvoting] = useState(false);
 
     const { _id, productImage, productName, externalLink, tags, ownerName, ownerEmail, description, timestamp } = product;
 
@@ -41,74 +43,74 @@ const ProductItem = ({ product }) => {
 
     const { date, time } = timestamp ? formatDateTime(timestamp) : { date: 'N/A', time: 'N/A' };
 
+    // Initialize isUpvoted state based on upvote data
     useEffect(() => {
-        const pendingUpvoteId = localStorage.getItem('pendingUpvote');
-        if (user && pendingUpvoteId === _id) {
-            localStorage.removeItem('pendingUpvote');
-            handleUpvoteProcess();
+        if (upvote) {
+            setIsUpvoted(upvote.some(item => item.productId === _id));
         }
-    }, [user]);
+    }, [upvote, _id]);
 
-    const handleUpvoteProcess = () => {
-        if (isOwner) {
-            Swal.fire({
-                icon: "error",
-                title: "Cannot upvote own product",
-                text: "You cannot upvote your own products",
-            });
-            return;
-        }
+    const handleUpvoteProcess = async () => {
+        if (isUpvoting || isOwner) return;
 
-        const existingUpvote = upvote.find(item => item.productId === _id);
+        try {
+            setIsUpvoting(true);
+            
+            if (isUpvoted) {
+                // Optimistically update UI
+                setIsUpvoted(false);
+                setCurrentUpvotes(prev => prev - 1);
 
-        if (existingUpvote) {
-            axiosSecure.delete(`/upvotes/${existingUpvote._id}`)
-                .then(res => {
-                    if (res.data.deletedCount > 0) {
-                        setCurrentUpvotes(prev => prev - 1);
-                        refetch();
-                        refetchProducts();
+                const existingUpvote = upvote.find(item => item.productId === _id);
+                const res = await axiosSecure.delete(`/upvotes/${existingUpvote._id}`);
+                
+                if (res.data.deletedCount > 0) {
+                    // Silently refresh data in background
+                    Promise.all([refetch(), refetchProducts()]);
+                    
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `Upvote removed from ${productName}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            } else {
+                // Optimistically update UI
+                setIsUpvoted(true);
+                setCurrentUpvotes(prev => prev + 1);
 
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: `Upvote removed from ${productName}`,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
-        } else {
-            const upvoteItem = {
-                productId: _id,
-                email: user.email,
-                productName,
-                productImage,
-                timestamp: new Date().toISOString()
+                const upvoteItem = {
+                    productId: _id,
+                    email: user.email,
+                    productName,
+                    productImage,
+                    timestamp: new Date().toISOString()
+                };
+
+                const res = await axiosSecure.post('/upvotes', upvoteItem);
+                
+                if (res.data.insertedId) {
+                    // Silently refresh data in background
+                    Promise.all([refetch(), refetchProducts()]);
+                    
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `${productName} upvoted`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             }
-            axiosSecure.post('/upvotes', upvoteItem)
-                .then(res => {
-                    if (res.data.insertedId) {
-                        setCurrentUpvotes(prev => prev + 1);
-                        refetch();
-                        refetchProducts();
-
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: `${productName} upvoted`,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
+        } finally {
+            setIsUpvoting(false);
         }
     };
 
     const handleUpvote = () => {
-        if (user && user.email) {
-            handleUpvoteProcess();
-        } else {
+        if (!user?.email) {
             localStorage.setItem('pendingUpvote', _id);
             Swal.fire({
                 title: "Login Required",
@@ -120,19 +122,16 @@ const ProductItem = ({ product }) => {
                 confirmButtonText: "Login"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigate('/login', { state: { from: location } })
+                    navigate('/login', { state: { from: location } });
                 } else {
                     localStorage.removeItem('pendingUpvote');
                 }
             });
+            return;
         }
-    }
 
-    useEffect(() => {
-        setCurrentUpvotes(product.upvotes || 0);
-    }, [product.upvotes]);
-
-    const hasUpvoted = upvote.some(item => item.productId === _id);
+        handleUpvoteProcess();
+    };
 
     return (
         <div className="h-full">
@@ -185,14 +184,15 @@ const ProductItem = ({ product }) => {
                         </span>
                         <button
                             onClick={handleUpvote}
-                            disabled={isOwner}
-                            className={`btn ${hasUpvoted ? 'btn-success' : 'btn-outline'} 
+                            disabled={isOwner || isUpvoting}
+                            className={`btn ${isUpvoted ? 'btn-success' : 'btn-outline'} 
                                     ${isOwner ? 'btn-disabled' : ''} 
                                     flex items-center gap-2`}
                         >
                             <FaCircleChevronUp />
                             {currentUpvotes}
                         </button>
+
                     </div>
                 </div>
             </div>
