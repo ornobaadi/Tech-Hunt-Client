@@ -101,7 +101,7 @@ const Dashboard = () => {
                 className="text-white p-3 fixed top-4 left-4 z-50 bg-gray-800 rounded-md md:hidden"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
-                {isSidebarOpen ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />}
+                {isSidebarOpen ? <TbLayoutSidebarLeftCollapse />  :  <TbLayoutSidebarRightCollapse />}
             </button>
 
             {/* Glass Effect Overlay for mobile */}

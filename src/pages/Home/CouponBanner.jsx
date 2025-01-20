@@ -28,9 +28,11 @@ const CouponsPage = () => {
     if (loading) return <div>Loading coupons...</div>;
 
     return (
-        <div className="text-center my-12">
-            <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Coupons</h4>
-            <h2 className="text-2xl lg:text-4xl font-bold text-base-content mb-10">Available Coupons</h2>
+        <div className="my-12">
+            <div className="text-center">
+                <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Coupons</h4>
+                <h2 className="text-2xl lg:text-4xl font-bold text-base-content mb-10">Available Coupons</h2>
+            </div>
             <Swiper
                 modules={[Pagination]}
                 spaceBetween={20}
@@ -38,7 +40,7 @@ const CouponsPage = () => {
                 pagination={{ clickable: true }}
                 breakpoints={{
                     640: { slidesPerView: 1.5 },
-                    768: { slidesPerView: 2 }, 
+                    768: { slidesPerView: 2 },
                     1024: { slidesPerView: 3.5 },
                 }}
             >

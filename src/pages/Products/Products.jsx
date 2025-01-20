@@ -65,7 +65,7 @@ const Products = () => {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="px-4 py-8">
             <Helmet>
                 <title>Products | Tech Hunt</title>
             </Helmet>
