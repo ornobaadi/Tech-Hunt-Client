@@ -127,7 +127,7 @@ const Navbar = () => {
                                 </button>
                                 <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow-lg">
                                     <li className="">
-                                        <p className="btn btn-block border-none">{user?.displayName || "User"}</p>
+                                        <p className="">{user?.displayName || "User"}</p>
                                     </li>
                                     <li>
                                         <Link to={getDashboardRoute()}>Dashboard</Link>

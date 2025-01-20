@@ -43,7 +43,7 @@ const Statistics = () => {
 
     return (
         <div className="w-full p-6 space-y-8">
-            <h2 className="text-center text-2xl font-semibold">Statistics Overview</h2>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Statistics Overview</h2>
 
             <div className="bg-base-100 rounded-lg shadow p-6">
                 <div className="h-96">
@@ -72,21 +72,21 @@ const Statistics = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="stats bg-primary text-primary-content">
                     <div className="stat">
-                        <div className="stat-title">Total Products</div>
+                        <div className="text-white">Total Products</div>
                         <div className="stat-value">{products.length}</div>
                     </div>
                 </div>
 
                 <div className="stats bg-secondary text-secondary-content">
                     <div className="stat">
-                        <div className="stat-title">Total Users</div>
+                        <div className="text-white">Total Users</div>
                         <div className="stat-value">{users.length}</div>
                     </div>
                 </div>
 
-                <div className="stats bg-accent text-accent-content">
+                <div className="stats bg-accent-content text-neutral-content">
                     <div className="stat">
-                        <div className="stat-title">Total Reviews</div>
+                        <div className="text-white">Total Reviews</div>
                         <div className="stat-value">{reviews.length}</div>
                     </div>
                 </div>
@@ -95,21 +95,21 @@ const Statistics = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="stats bg-success text-success-content">
                     <div className="stat">
-                        <div className="stat-title">Accepted Products</div>
+                        <div className="">Accepted Products</div>
                         <div className="stat-value">{acceptedProducts}</div>
                     </div>
                 </div>
 
                 <div className="stats bg-warning text-warning-content">
                     <div className="stat">
-                        <div className="stat-title">Pending Products</div>
+                        <div className="">Pending Products</div>
                         <div className="stat-value">{pendingProducts}</div>
                     </div>
                 </div>
 
                 <div className="stats bg-error text-error-content">
                     <div className="stat">
-                        <div className="stat-title">Rejected Products</div>
+                        <div className="">Rejected Products</div>
                         <div className="stat-value">{rejectedProducts}</div>
                     </div>
                 </div>

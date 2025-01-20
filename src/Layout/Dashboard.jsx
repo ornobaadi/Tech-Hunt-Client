@@ -25,7 +25,7 @@ const Dashboard = () => {
         <div className="flex">
             {/* Sidebar */}
             <div
-                className={`transition-all duration-300 bg-slate-600 text-white ${isCollapsed ? "w-20" : "w-80"
+                className={`transition-all duration-300 bg-gray-900 text-white ${isCollapsed ? "w-20" : "w-80"
                     } min-h-screen`}
             >
                 <button

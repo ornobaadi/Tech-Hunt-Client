@@ -101,7 +101,7 @@ const ProductReviewQueue = () => {
 
     return (
         <div className="w-full p-4">
-            <h2 className="text-2xl font-semibold mb-4">Product Review Queue</h2>
+            <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Product Review Queue</h2>
             <div className="overflow-x-auto">
                 <table className="table">
                     <thead>

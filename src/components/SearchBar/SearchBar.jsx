@@ -29,7 +29,7 @@ const SearchBar = ({ onSearchResults }) => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="input input-bordered join-item w-full"
                 />
-                <button type="submit" className="btn join-item btn-primary">
+                <button type="submit" className="btn join-item bg-purple-500 text-white">
                     Search
                 </button>
             </div>

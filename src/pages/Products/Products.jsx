@@ -28,7 +28,7 @@ const Products = () => {
                 const acceptedProducts = response.data.filter(p => p.status === 'accepted');
                 setProducts(acceptedProducts);
                 setPageCount(Math.ceil(acceptedProducts.length / ITEMS_PER_PAGE));
-                // Reset to first page when search results change
+                
                 setItemOffset(0);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -109,7 +109,7 @@ const Products = () => {
                                     previousClassName="block border border-gray-200 rounded hover:bg-gray-100 transition-colors"
                                     nextClassName="block border border-gray-200 rounded hover:bg-gray-100 transition-colors"
                                     breakClassName="block px-3 py-2"
-                                    activeClassName="!bg-blue-500 border-blue-500"
+                                    activeClassName="!bg-purple-500 border-blue-500"
                                     activeLinkClassName="!text-white hover:!text-white"
                                     disabledClassName="opacity-50 cursor-not-allowed"
                                 />

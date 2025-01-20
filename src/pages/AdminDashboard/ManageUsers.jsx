@@ -127,7 +127,7 @@ const ManageUsers = () => {
         <div className="p-4 max-w-7xl mx-auto">
             <div className="bg-base-100 rounded-lg shadow-lg p-6 mb-8">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-                    <h2 className="text-3xl font-bold text-primary">Manage Users</h2>
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Manage Users</h2>
                     <div className="stats shadow">
                         <div className="stat">
                             <div className="stat-title">Total Users</div>

@@ -172,7 +172,7 @@ const MyProducts = () => {
     return (
         <div>
             <div>
-                <h2 className="text-2xl font-bold text-center my-10">My Products: {products.length}</h2>
+                <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">My Products: {products.length}</h2>
             </div>
             <div className="overflow-x-auto">
                 <table className="table">

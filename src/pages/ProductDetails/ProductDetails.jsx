@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaCircleChevronUp } from "react-icons/fa6";
+import { FaCircleChevronUp, FaClock } from "react-icons/fa6";
 import ReactStars from 'react-awesome-stars-rating';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
@@ -197,7 +197,8 @@ const ProductDetails = () => {
                                 <span key={index} className="badge badge-outline badge-primary">{tag}</span>
                             ))}
                         </div>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <p className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                            <FaClock className="text-purple-500" />
                             Added on: {product.timestamp ?
                                 new Date(product.timestamp).toLocaleDateString('en-US', {
                                     year: 'numeric',
@@ -214,7 +215,7 @@ const ProductDetails = () => {
                                 href={product.externalLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="btn btn-primary gap-3"
+                                className="btn btn-primary text-white gap-3"
                             >
                                 Visit Website <GrShare />
                             </a>
@@ -244,7 +245,7 @@ const ProductDetails = () => {
                         <img
                             src={user.photoURL}
                             alt={user.displayName}
-                            className="w-12 h-12 rounded-full border-2 border-purple-600"
+                            className="w-12 h-12 object-cover rounded-full border-2 border-purple-600"
                         />
                         <div>
                             <p className="font-semibold text-lg">{user.displayName}</p>

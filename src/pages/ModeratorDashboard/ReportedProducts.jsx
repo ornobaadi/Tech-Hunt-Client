@@ -114,7 +114,7 @@ const ReportedProducts = () => {
             </Helmet>
 
             <div className="bg-base-100 p-6 rounded-lg shadow-lg">
-                <h2 className="text-3xl font-bold mb-6 text-center">Reported Products</h2>
+                <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Reported Products</h2>
 
                 <div className="overflow-x-auto">
                     <table className="table table-zebra w-full">
