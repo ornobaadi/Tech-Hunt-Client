@@ -1,6 +1,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet-async';
 
 const Statistics = () => {
     const axiosSecure = useAxiosSecure();
@@ -43,6 +44,9 @@ const Statistics = () => {
 
     return (
         <div className="w-full p-6 space-y-8">
+            <Helmet>
+                <title>Statistics | Tech Hunt</title>
+            </Helmet>
             <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Statistics Overview</h2>
 
             <div className="bg-base-100 rounded-lg shadow p-6">

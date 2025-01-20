@@ -110,7 +110,7 @@ const ReportedProducts = () => {
     return (
         <div className="w-full p-4">
             <Helmet>
-                <title>Tech Hunt | Reported Products</title>
+                <title> Reported Products | Tech Hunt</title>
             </Helmet>
 
             <div className="bg-base-100 p-6 rounded-lg shadow-lg">

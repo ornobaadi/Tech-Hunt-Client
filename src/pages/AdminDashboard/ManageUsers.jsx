@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Shield, UserCog, XCircle } from "lucide-react";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -125,6 +126,9 @@ const ManageUsers = () => {
 
     return (
         <div className="p-4 max-w-7xl mx-auto">
+            <Helmet>
+                <title>Manage Users | Tech Hunt</title>
+            </Helmet>
             <div className="bg-base-100 rounded-lg shadow-lg p-6 mb-8">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                     <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Manage Users</h2>

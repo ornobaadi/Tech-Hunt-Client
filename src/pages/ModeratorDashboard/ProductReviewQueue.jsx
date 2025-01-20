@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const ProductReviewQueue = () => {
     const axiosSecure = useAxiosSecure();
@@ -101,6 +102,9 @@ const ProductReviewQueue = () => {
 
     return (
         <div className="w-full p-4">
+            <Helmet>
+                <title>Product Review Queue | Tech Hunt</title>
+            </Helmet>
             <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Product Review Queue</h2>
             <div className="overflow-x-auto">
                 <table className="table">

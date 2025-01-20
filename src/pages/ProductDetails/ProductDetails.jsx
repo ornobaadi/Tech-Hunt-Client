@@ -8,6 +8,7 @@ import useUpvote from '../../hooks/useUpvote';
 import useProducts from '../../hooks/useProducts';
 import Swal from 'sweetalert2';
 import { GrShare } from "react-icons/gr";
+import { Helmet } from 'react-helmet-async';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -179,6 +180,9 @@ const ProductDetails = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <Helmet>
+                <title>{product.productName} | Tech Hunt</title>
+            </Helmet>
             {/* Product Details Section */}
             <div className="rounded-lg shadow-xl p-6 mb-8">
                 <div className="flex flex-col md:flex-row gap-8">

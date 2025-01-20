@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Tag, Trash2, Plus, Edit2 } from 'lucide-react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet-async';
 
 const ManageCoupons = () => {
     const [coupons, setCoupons] = useState([]);
@@ -94,6 +95,9 @@ const ManageCoupons = () => {
 
     return (
         <div className="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
+            <Helmet>
+                <title>Manage Coupons | Tech Hunt</title>
+            </Helmet>
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div className="space-y-1">

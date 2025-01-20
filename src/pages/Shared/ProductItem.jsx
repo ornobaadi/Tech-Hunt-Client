@@ -157,7 +157,7 @@ const ProductItem = ({ product }) => {
                                 <GrShare />
                             </a>
                         </div>
-                        <p className="text-sm text-gray-500 my-2 line-clamp-2">{description}</p>
+                        <p className="text-sm text-gray-500 my-3 line-clamp-2">{description}</p>
                         <div className="flex flex-wrap gap-2 mb-3">
                             {tags.map((tag, index) => (
                                 <span

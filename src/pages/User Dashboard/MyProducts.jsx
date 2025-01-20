@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useForm } from 'react-hook-form';
 import { WithContext as ReactTags } from 'react-tag-input';
+import { Helmet } from "react-helmet-async";
 
 const MyProducts = () => {
     const [products, setProducts] = useState([]);
@@ -171,6 +172,9 @@ const MyProducts = () => {
 
     return (
         <div>
+            <Helmet>
+                <title>My Products | Tech Hunt</title>
+            </Helmet>
             <div>
                 <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">My Products: {products.length}</h2>
             </div>

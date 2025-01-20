@@ -4,6 +4,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ProductItem from "../Shared/ProductItem";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import ReactPaginate from "react-paginate";
+import { Helmet } from "react-helmet-async";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -66,6 +67,9 @@ const Products = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <Helmet>
+                <title>Products | Tech Hunt</title>
+            </Helmet>
             <SearchBar onSearchResults={handleSearchResults} />
             
             {loading ? (

@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import useUpvote from "../../hooks/useUpvote";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const Upvotes = () => {
     const [upvote, refetch] = useUpvote();
@@ -36,6 +37,9 @@ const Upvotes = () => {
 
     return (
         <div>
+            <Helmet>
+                <title>My Upvotes | Tech Hunt</title>
+            </Helmet>
             <div>
                 <h2 className="text-3xl font-bold text-center my-10 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">My Upvotes: {upvote.length}</h2>
             </div>

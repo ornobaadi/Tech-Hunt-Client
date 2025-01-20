@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Tag } from 'lucide-react';
 import useAuth from "../../hooks/useAuth"
 import useAxiosPublic from '../../hooks/useAxiosPublic';
+import { Helmet } from 'react-helmet-async';
 
 const AddProduct = () => {
     const navigate = useNavigate();
@@ -145,6 +146,9 @@ const AddProduct = () => {
 
     return (
         <div className="max-w-3xl mx-auto p-4 md:p-6">
+            <Helmet>
+                <title>Add Product | Tech Hunt</title>
+            </Helmet>
             <div className="card bg-base-100 shadow-xl">
                 <div className="card-body p-6 md:p-8">
                     <h2 className="text-3xl font-bold text-center mb-5 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Add New Product</h2>
