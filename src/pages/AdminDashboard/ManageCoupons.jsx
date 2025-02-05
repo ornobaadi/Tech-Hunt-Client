@@ -94,19 +94,16 @@ const ManageCoupons = () => {
     }
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
             <Helmet>
                 <title>Manage Coupons | Tech Hunt</title>
             </Helmet>
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div className="space-y-1">
-                    <h2 className="text-3xl font-bold text-primary">
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                         Manage Coupons
                     </h2>
-                    <p className="text-sm opacity-70">
-                        Create and manage discount coupons for your store
-                    </p>
                 </div>
                 <button
                     onClick={() => {

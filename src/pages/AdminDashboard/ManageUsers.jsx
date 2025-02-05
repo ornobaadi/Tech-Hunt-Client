@@ -134,8 +134,7 @@ const ManageUsers = () => {
                     <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Manage Users</h2>
                     <div className="stats shadow">
                         <div className="stat">
-                            <div className="stat-title">Total Users</div>
-                            <div className="stat-value text-primary">{users.length}</div>
+                            <div className="font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Total Users: {users.length}</div>
                         </div>
                     </div>
                 </div>

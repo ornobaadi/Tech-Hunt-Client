@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" alt="Tech Hunt Logo">
+  <img src="public/Tech Hunt Mockup.png" alt="Tech Hunt Logo">
 </div>
 
 # Tech Hunt
@@ -52,9 +52,14 @@ A dynamic platform for discovering and sharing tech products like web apps, AI t
 ---
 
 ## 🚀 Live Demo
-[Tech Hunt Live Site](https://tech-hunt-ornobaadi.surge.sh/)
-[Alternative Live Site](https://tech-hunt-39126.web.app/)
+[Tech Hunt Live Site](https://tech-hunt-39126.web.app/)
+[Alternative Live Site](https://tech-hunt-ornobaadi.surge.sh/)
 
+
+---
+
+## Server Side Code
+[Tech Hunt Server](https://github.com/ornobaadi/Tech-Hunt-Server)
 
 ---
 
@@ -73,11 +78,11 @@ A dynamic platform for discovering and sharing tech products like web apps, AI t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ornobaadi/tech-hunt.git
+   git clone https://github.com/ornobaadi/Tech-Hunt-Client.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd tech-hunt
+   cd Tech-Hunt-Client
    ```
 3. Install dependencies:
    ```bash
@@ -141,7 +146,7 @@ The statistics page includes:
 For questions or suggestions, feel free to contact me:
 
 - **Email**: aadi4789@gmail.com
-- **GitHub**: [yourusername](https://github.com/ornobaadi)
+- **GitHub**: [OrnobAadi](https://github.com/ornobaadi)
 
 Happy coding! 🎉
 
