@@ -21,7 +21,7 @@ const FeaturedProducts = () => {
 
     if (loading) {
         return <div className="text-center">
-            <span className="loading loading-dots loading-xl"></span>
+            <span className="loading loading-bars loading-xl"></span>
         </div>;
     }
 

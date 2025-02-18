@@ -23,6 +23,7 @@ import ProductReviewQueue from "../pages/ModeratorDashboard/ProductReviewQueue";
 import ReportedProducts from "../pages/ModeratorDashboard/ReportedProducts";
 import Payment from "../pages/User Dashboard/Payment";
 import Coupons from "../pages/Coupons/Coupons";
+import About from "../pages/About/About";
 
 export const router = createBrowserRouter([
     {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
             {
                 path: 'coupons',
                 element: <Coupons></Coupons>,
+            },
+            {
+                path: 'about',
+                element: <About></About>,
             },
             {
                 path: 'login',

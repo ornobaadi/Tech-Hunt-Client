@@ -36,17 +36,21 @@ const Navbar = () => {
             <li><NavLink to="/" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
             }>Home</NavLink></li>
+            
             <li><NavLink to="/products" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
             }>Products</NavLink></li>
+            <li><NavLink to="/about" className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "text-base-content"
+            }>About</NavLink></li>
             {user && (
                 <>
-                <li><NavLink to="/dashboard/profile" className={({ isActive }) =>
-                    isActive ? "text-primary font-bold" : "text-base-content"
-                }>My Profile</NavLink></li>
                 <li><NavLink to="/coupons" className={({ isActive }) =>
                     isActive ? "text-primary font-bold" : "text-base-content"
                 }>Coupons</NavLink></li>
+                <li><NavLink to="/dashboard/profile" className={({ isActive }) =>
+                    isActive ? "text-primary font-bold" : "text-base-content"
+                }>My Profile</NavLink></li>
                 </>
             )}
         </>
