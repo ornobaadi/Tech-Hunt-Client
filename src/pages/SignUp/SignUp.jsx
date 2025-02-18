@@ -205,7 +205,7 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <div className="form-control mt-6">
-                                <input className="btn w-full btn-primary" type="submit" value="Signup" />
+                                <input className="btn w-full bg-purple-700 text-white" type="submit" value="Signup" />
                             </div>
                         </form>
                         <div className="flex justify-center mb-5">

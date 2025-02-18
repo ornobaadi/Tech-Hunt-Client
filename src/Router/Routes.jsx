@@ -22,6 +22,7 @@ import ModeratorRoute from "./ModeratorRoute";
 import ProductReviewQueue from "../pages/ModeratorDashboard/ProductReviewQueue";
 import ReportedProducts from "../pages/ModeratorDashboard/ReportedProducts";
 import Payment from "../pages/User Dashboard/Payment";
+import Coupons from "../pages/Coupons/Coupons";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
             {
                 path: 'products',
                 element: <Products></Products>,
+            },
+            {
+                path: 'coupons',
+                element: <Coupons></Coupons>,
             },
             {
                 path: 'login',

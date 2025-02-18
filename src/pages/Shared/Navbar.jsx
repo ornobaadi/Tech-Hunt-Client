@@ -31,7 +31,7 @@ const Navbar = () => {
         return "/dashboard/profile";
     };
 
-    const links =
+    const links = (
         <>
             <li><NavLink to="/" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
@@ -39,18 +39,18 @@ const Navbar = () => {
             <li><NavLink to="/products" className={({ isActive }) =>
                 isActive ? "text-primary font-bold" : "text-base-content"
             }>Products</NavLink></li>
-
-
-            {/* <li>
-                <details>
-                    <summary>Menu</summary>
-                    <ul className="p-2">
-                        <li><a>Submenu</a></li>
-                        <li><a>Submenu</a></li>
-                    </ul>
-                </details>
-            </li> */}
+            {user && (
+                <>
+                <li><NavLink to="/dashboard/profile" className={({ isActive }) =>
+                    isActive ? "text-primary font-bold" : "text-base-content"
+                }>My Profile</NavLink></li>
+                <li><NavLink to="/coupons" className={({ isActive }) =>
+                    isActive ? "text-primary font-bold" : "text-base-content"
+                }>Coupons</NavLink></li>
+                </>
+            )}
         </>
+    );
 
 
 
