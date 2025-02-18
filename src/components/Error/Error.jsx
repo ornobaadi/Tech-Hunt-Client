@@ -7,7 +7,7 @@ const Error = () => {
         <div className="flex items-center justify-center h-screen">
             <div className="text-center">
                 <Lottie
-                    className="mx-auto "
+                    className="mx-auto"
                     animationData={errorpage}
                     loop={true}
                 />

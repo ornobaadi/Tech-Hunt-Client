@@ -125,7 +125,7 @@ const Profile = () => {
                             </div>
                         ) : (
                             <>
-                                <div className="px-4 py-1 bg-gray-100 rounded-full text-sm">
+                                <div className="px-4 py-1 border border-gray-400 rounded-full text-sm">
                                     Free Member
                                 </div>
                                 <button
