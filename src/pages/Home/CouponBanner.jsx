@@ -25,7 +25,11 @@ const CouponsPage = () => {
         fetchCoupons();
     }, []);
 
-    if (loading) return <div>Loading coupons...</div>;
+    if (loading) return <div>
+        <div className="text-center">
+            <span className="loading loading-dots loading-xl"></span>
+        </div>
+    </div>
 
     return (
         <div className="my-12">

@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { Search } from 'lucide-react';
 
 const SearchBar = ({ onSearchResults }) => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -10,30 +10,38 @@ const SearchBar = ({ onSearchResults }) => {
     
     const handleSearch = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axiosSecure.get(`/products/search?q=${searchTerm}`);
-            onSearchResults(response.data);
-            setSearchParams({ q: searchTerm });
-        } catch (error) {
-            console.error('Error searching products:', error);
+        if (searchTerm.trim()) {
+            onSearchResults(searchTerm);
+        } else {
+            // If search is empty, clear search results
+            onSearchResults('');
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch(e);
         }
     };
 
     return (
-        <form onSubmit={handleSearch} className="w-full max-w-2xl mx-auto mb-8">
-            <div className="join w-full">
-                <input
-                    type="text"
-                    placeholder="Search by tags or product name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="input input-bordered join-item w-full"
-                />
-                <button type="submit" className="btn join-item bg-purple-500 text-white">
-                    Search
-                </button>
-            </div>
-        </form>
+        <div className="relative flex h-12">
+            <input
+                type="text"
+                placeholder="Search by tags or product name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="input input-bordered h-12 min-h-12 w-full rounded-r-none focus:outline-none"
+            />
+            <button 
+                type="button" 
+                onClick={handleSearch}
+                className="btn btn-outline h-12 min-h-12 px-4 text-white bg-purple-600 rounded-l-none border-l-0"
+            >
+                <Search /> Search
+            </button>
+        </div>
     );
 };
 

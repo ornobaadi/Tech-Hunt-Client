@@ -13,7 +13,7 @@ const Error = () => {
                 />
                 <Link
                     to="/"
-                    className="btn btn-primary btn-lg"
+                    className="btn bg-purple-500 text-white btn-lg"
                 >
                     Back to Home
                 </Link>

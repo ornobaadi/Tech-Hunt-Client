@@ -20,7 +20,9 @@ const FeaturedProducts = () => {
     }, [products]);
 
     if (loading) {
-        return <div className="text-center">Loading featured products...</div>;
+        return <div className="text-center">
+            <span className="loading loading-dots loading-xl"></span>
+        </div>;
     }
 
     if (error) {

@@ -10,17 +10,22 @@ const ITEMS_PER_PAGE = 6;
 
 const Products = () => {
     const [products, setProducts] = useState([]);
+    const [displayProducts, setDisplayProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
+    const [sortBy, setSortBy] = useState("recent");
     const axiosSecure = useAxiosSecure();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
                 const searchTerm = searchParams.get('q');
+                const sort = searchParams.get('sort') || 'recent';
+                setSortBy(sort);
+                
                 const response = await axiosSecure.get(searchTerm 
                     ? `/products/search?q=${searchTerm}`
                     : '/products'
@@ -28,9 +33,9 @@ const Products = () => {
                 
                 const acceptedProducts = response.data.filter(p => p.status === 'accepted');
                 setProducts(acceptedProducts);
-                setPageCount(Math.ceil(acceptedProducts.length / ITEMS_PER_PAGE));
                 
-                setItemOffset(0);
+                // Initial sort of products
+                applySorting(acceptedProducts, sort);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {
@@ -41,19 +46,62 @@ const Products = () => {
         fetchProducts();
     }, [searchParams, axiosSecure]);
 
-    const handleSearchResults = (searchTerm) => {
-        const currentParams = new URLSearchParams(window.location.search);
-        if (searchTerm) {
-            currentParams.set('q', searchTerm);
+    // Apply sorting to products
+    const applySorting = (productsToSort, sortType) => {
+        let sorted = [...productsToSort];
+        
+        if (sortType === "popular") {
+            // Sort by total upvotes (highest first)
+            sorted.sort((a, b) => {
+                const aUpvotes = a.upvote || 0;
+                const bUpvotes = b.upvote || 0;
+                return bUpvotes - aUpvotes;
+            });
         } else {
-            currentParams.delete('q');
+            // Sort by timestamp (newest first)
+            sorted.sort((a, b) => {
+                const aDate = new Date(a.timestamp || a.createdAt || 0);
+                const bDate = new Date(b.timestamp || b.createdAt || 0);
+                return bDate - aDate;
+            });
         }
-        window.history.pushState({}, '', `${window.location.pathname}?${currentParams}`);
-        window.dispatchEvent(new Event('popstate'));
+        
+        setDisplayProducts(sorted);
+        setPageCount(Math.ceil(sorted.length / ITEMS_PER_PAGE));
+        setItemOffset(0); // Reset to first page when sorting changes
+    };
+
+    // Handle sort option change
+    const handleSortChange = (option) => {
+        setSortBy(option);
+        
+        // Update URL with the sort parameter
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('sort', option);
+        setSearchParams(newParams);
+        
+        // Apply the new sorting
+        applySorting(products, option);
+    };
+
+    const handleSearchResults = (searchTerm) => {
+        const newParams = new URLSearchParams(searchParams);
+        if (searchTerm) {
+            newParams.set('q', searchTerm);
+        } else {
+            newParams.delete('q');
+        }
+        
+        // Preserve the current sort parameter
+        if (sortBy) {
+            newParams.set('sort', sortBy);
+        }
+        
+        setSearchParams(newParams);
     };
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * ITEMS_PER_PAGE) % products.length;
+        const newOffset = (event.selected * ITEMS_PER_PAGE) % displayProducts.length;
         setItemOffset(newOffset);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -61,7 +109,7 @@ const Products = () => {
     // Get current products for display
     const getCurrentProducts = () => {
         const endOffset = itemOffset + ITEMS_PER_PAGE;
-        return products.slice(itemOffset, endOffset);
+        return displayProducts.slice(itemOffset, endOffset);
     };
 
     return (
@@ -69,7 +117,30 @@ const Products = () => {
             <Helmet>
                 <title>Products | Tech Hunt</title>
             </Helmet>
-            <SearchBar onSearchResults={handleSearchResults} />
+            
+            <div className="flex flex-col md:flex-row items-center mb-6 gap-4">
+                <div className="w-full md:w-2/3">
+                    <SearchBar onSearchResults={handleSearchResults} />
+                </div>
+                <div className="w-full flex justify-end">
+                    <div className="dropdown dropdown-end">
+                        <label tabIndex={0} className="btn btn-outline">
+                            {sortBy === "recent" ? "Recently Added" : "Most Popular"}
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li className={sortBy === "recent" ? "bg-gray-100" : ""}>
+                                <a onClick={() => handleSortChange("recent")}>Recently Added</a>
+                            </li>
+                            <li className={sortBy === "popular" ? "bg-gray-100" : ""}>
+                                <a onClick={() => handleSortChange("popular")}>Most Popular</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             
             {loading ? (
                 <div className="flex justify-center">
@@ -77,7 +148,7 @@ const Products = () => {
                 </div>
             ) : (
                 <div>
-                    {products.length > 0 ? (
+                    {displayProducts.length > 0 ? (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                                 {getCurrentProducts().map(product => (
@@ -119,7 +190,7 @@ const Products = () => {
                             )}
                             
                             <div className="text-center text-sm text-gray-600 mt-4">
-                                Showing {itemOffset + 1} to {Math.min(itemOffset + ITEMS_PER_PAGE, products.length)} of {products.length} products
+                                Showing {itemOffset + 1} to {Math.min(itemOffset + ITEMS_PER_PAGE, displayProducts.length)} of {displayProducts.length} products
                             </div>
                         </>
                     ) : (
