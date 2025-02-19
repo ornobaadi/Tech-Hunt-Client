@@ -111,12 +111,12 @@ const SignUp = () => {
                 <title>Signup | Tech Hunt</title>
             </Helmet>
             <div className="hero bg-base-100 min-h-screen">
-                <div className="hero-content flex-col">
+                <div className="hero-content w-full flex-col max-w-lg">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold pb-10">Sign up now!</h1>
                         
                     </div>
-                    <div className="card bg-base-100 w-full max-w-xl shrink-0 shadow-2xl">
+                    <div className="card bg-base-100 w-full shrink-0 shadow-2xl">
                         <form onSubmit={handleSubmit(onSubmit)} className="card-body">
                             <div className="form-control">
                                 <label className="label">
@@ -126,7 +126,7 @@ const SignUp = () => {
                                     type="text"
                                     {...register("name")}
                                     placeholder="Name"
-                                    className="input input-bordered"
+                                    className="input input-bordered w-full"
                                     required
                                 />
                             </div>
@@ -138,7 +138,7 @@ const SignUp = () => {
                                     type="text"
                                     {...register("photoURL")}
                                     placeholder="PhotoURL"
-                                    className="input input-bordered"
+                                    className="input input-bordered w-full"
                                     required
                                 />
                             </div>
@@ -150,7 +150,7 @@ const SignUp = () => {
                                     type="email"
                                     {...register("email")}
                                     placeholder="Email"
-                                    className="input input-bordered"
+                                    className="input input-bordered w-full"
                                     required
                                 />
                             </div>
@@ -165,7 +165,7 @@ const SignUp = () => {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Password"
-                                        className={`input input-bordered ${isPasswordValid ? "input-success" : ""
+                                        className={`input w-full input-bordered ${isPasswordValid ? "input-success" : ""
                                             }`}
                                         required
                                     />

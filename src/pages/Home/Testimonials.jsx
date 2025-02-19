@@ -35,6 +35,7 @@ const Testimonials = () => {
         <section className="py-20 bg-base-200 overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
+                <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Testimonials</h4>
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Success Stories</h2>
                     <p className="text-base-content/70 max-w-3xl mx-auto">
                         Hear from the creators and community members who've experienced the Tech Hunt advantage.

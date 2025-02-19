@@ -6,6 +6,7 @@ const Impact = () => {
         <section className="py-20 bg-gradient-to-br from-base-200 via-base-100 to-base-200">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
+                <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Impact</h4>
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact</h2>
                     <p className="text-base-content/70 max-w-3xl mx-auto">
                         We measure our success by the connections we foster and the growth we enable.

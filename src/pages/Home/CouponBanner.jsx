@@ -47,7 +47,7 @@ const CouponsPage = () => {
                     viewport={{ once: true }}
                 >
                     <div className="text-center my-6">
-                        <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Trending</h4>
+                        <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Coupons</h4>
                         <h2 className="text-2xl lg:text-4xl font-bold text-base-content">Exclusive Coupons</h2>
                     </div>
                     <p className="text-base-content/70 max-w-2xl mx-auto">

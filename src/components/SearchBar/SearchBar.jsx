@@ -39,7 +39,7 @@ const SearchBar = ({ onSearchResults }) => {
                 onClick={handleSearch}
                 className="btn btn-outline h-12 min-h-12 px-4 text-white bg-purple-600 rounded-l-none border-l-0"
             >
-                <Search /> Search
+                <Search />
             </button>
         </div>
     );

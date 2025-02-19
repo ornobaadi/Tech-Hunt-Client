@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
-import { Github, Linkedin } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="bg-gray-50">
+    <div className="">
 
       {/* Mission Section */}
-      <section className="py-24">
+      <section className="py-12">
         <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0 }}
@@ -24,7 +23,7 @@ const About = () => {
             >
               <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Purpose</h4>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Mission</h2>
-              <p className="text-gray-700 mb-6 leading-relaxed">
+              <p className="text-gray-500 mb-6 leading-relaxed">
                 We believe great products should be discovered based on merit, not marketing budgets. Our platform creates a space where innovation thrives regardless of resources.
               </p>
               <div className="space-y-4">
@@ -33,7 +32,7 @@ const About = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  className="flex items-start p-3 bg-white rounded-lg shadow-sm"
+                  className="flex items-start p-3 rounded-lg shadow-sm"
                 >
                   <span className="text-blue-500 mr-3 text-xl">✓</span>
                   <span>Creators gain visibility without massive marketing spend</span>
@@ -43,7 +42,7 @@ const About = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-start p-3 bg-white rounded-lg shadow-sm"
+                  className="flex items-start p-3 rounded-lg shadow-sm"
                 >
                   <span className="text-blue-500 mr-3 text-xl">✓</span>
                   <span>Users discover useful tools before they go mainstream</span>
@@ -53,7 +52,7 @@ const About = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
-                  className="flex items-start p-3 bg-white rounded-lg shadow-sm"
+                  className="flex items-start p-3 rounded-lg shadow-sm"
                 >
                   <span className="text-blue-500 mr-3 text-xl">✓</span>
                   <span>Community curation ensures quality rises to the top</span>
@@ -84,7 +83,7 @@ const About = () => {
       <ValuesGrid />
 
       {/* Team Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
           <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Our Experts</h4>
@@ -139,7 +138,7 @@ const About = () => {
 // Component for Values Grid
 const ValuesGrid = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -150,7 +149,7 @@ const ValuesGrid = () => {
         >
           <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">What we stand for</h4>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Core Values</h2>
-          <p className="text-base-content/70 max-w-3xl mx-auto text-gray-600">
+          <p className="text-base-content/70 max-w-3xl mx-auto">
             The principles that guide our platform, community, and team.
           </p>
         </motion.div>
@@ -212,7 +211,7 @@ const ValueCard = ({ number, title, description, color }) => {
       whileHover={{ y: -5 }}
       transition={{ duration: 0.4 }}
       viewport={{ once: true }}
-      className="group bg-base-100 border border-base-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all bg-white"
+      className="group bg-base-100 border border-base-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
     >
       <div className="p-6">
         <div className="flex items-start gap-4 mb-4">
@@ -221,7 +220,7 @@ const ValueCard = ({ number, title, description, color }) => {
           </span>
           <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{title}</h3>
         </div>
-        <p className="text-base-content/70 text-gray-600">{description}</p>
+        <p className="text-base-content/70">{description}</p>
       </div>
       <div className={`h-1 w-full ${color} opacity-70 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300`}></div>
     </motion.div>
@@ -248,7 +247,7 @@ const TeamMember = ({ name, role, image }) => {
         />
       </div>
       <h3 className="text-xl font-semibold mb-1">{name}</h3>
-      <p className="text-gray-600 mb-3">{role}</p>
+      <p className="text-gray-500 mb-3">{role}</p>
       
     </motion.div>
   );

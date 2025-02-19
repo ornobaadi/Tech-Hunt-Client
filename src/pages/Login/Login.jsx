@@ -68,12 +68,12 @@ const Login = () => {
                 <title>Login | Tech Hunt</title>
             </Helmet>
             <div className="hero bg-base-100 min-h-screen">
-                <div className="hero-content flex-col">
+                <div className="hero-content flex-col w-full max-w-md">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold pb-10">Login now!</h1>
                         
                     </div>
-                    <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+                    <div className="card bg-base-100 w-full shrink-0 shadow-2xl">
                         <form onSubmit={handleLogin} className="card-body">
                             <div className="form-control">
                                 <label className="label">
@@ -83,7 +83,7 @@ const Login = () => {
                                     type="email"
                                     name="email"
                                     placeholder="email"
-                                    className="input input-bordered"
+                                    className="input input-bordered  w-full"
                                     required
                                 />
                             </div>

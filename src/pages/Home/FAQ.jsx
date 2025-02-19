@@ -54,6 +54,7 @@ const FAQ = () => {
         <section className="py-20">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
+                <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">FAQ</h4>
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
                     <p className="text-base-content/70 max-w-2xl mx-auto">
                         Everything you need to know about Tech Hunt and how to get started.
