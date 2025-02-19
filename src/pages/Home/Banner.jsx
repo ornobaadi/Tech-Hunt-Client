@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import banner from "../../assets/banner.jpg";
-import { motion } from "framer-motion"; // You'll need to install framer-motion
+import { motion } from "framer-motion";
 
 const Banner = () => {
     return (

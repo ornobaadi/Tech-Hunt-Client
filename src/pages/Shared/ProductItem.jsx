@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCircleChevronUp } from "react-icons/fa6";
 import { GrShare } from "react-icons/gr";
 import { FaClock } from "react-icons/fa";
+import { motion } from 'framer-motion'; // optional - install if you want animations
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useUpvote from "../../hooks/useUpvote";
@@ -130,54 +131,70 @@ const ProductItem = ({ product }) => {
     };
 
     return (
-        <div className="h-full">
-            <div className="flex flex-col h-full gap-4 p-5 bg-base-100 shadow-md rounded-lg hover:shadow-lg transition-shadow">
-                <div className="flex gap-4">
-                    <img
-                        src={productImage}
-                        alt={productName}
-                        className="w-12 h-12 lg:w-24 lg:h-24 rounded-md object-cover flex-shrink-0"
-                    />
+        <div className="h-full group">
+            <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-xl transition-all duration-300 backdrop-blur-sm bg-opacity-80 dark:bg-opacity-90">
+                <div className="flex gap-5">
+                    {/* Product Image with subtle gradient overlay */}
+                    <div className="relative overflow-hidden rounded-lg">
+                        <img
+                            src={productImage}
+                            alt={productName}
+                            className="w-14 h-14 lg:w-24 lg:h-24 object-cover transform transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                             <Link
                                 to={`/product/${_id}`}
-                                className="text-lg font-bold hover:underline text-base-content truncate"
+                                className="text-lg font-bold text-base-content hover:text-purple-700 dark:hover:text-purple-400 transition-colors duration-200 truncate"
                             >
                                 {productName}
                             </Link>
-                            <a href={externalLink}
-                                className="hover:text-purple-700 flex-shrink-0"
+                            <a 
+                                href={externalLink}
+                                className="text-gray-500 hover:text-purple-500 transition-colors duration-200 flex-shrink-0"
                                 target="_blank"
-                                rel="noopener noreferrer">
-                                <GrShare />
+                                rel="noopener noreferrer"
+                                aria-label="Visit external link"
+                            >
+                                <GrShare className="text-sm" />
                             </a>
                         </div>
-                        <p className="text-sm text-gray-500 my-3 line-clamp-2">{description}</p>
+                        
+                        <p className="text-sm text-base-content my-3 line-clamp-2 leading-relaxed">{description}</p>
+                        
                         <div className="flex flex-wrap gap-2 mb-3">
                             {tags.map((tag, index) => (
                                 <span
                                     key={index}
-                                    className="badge cursor-pointer badge-outline badge-primary text-xs"
+                                    className="px-2.5 py-1 text-xs font-medium border rounded-full text-purple-700 transition-colors duration-200 hover:bg-purple-100 cursor-pointer"
                                 >
                                     {tag}
                                 </span>
                             ))}
                         </div>
+                        
                         {timestamp && (
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                                <FaClock className="text-purple-500" />
+                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                <FaClock className="text-purple-400" />
                                 <span>Added on {date} at {time}</span>
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className="mt-auto">
-                    <div className="flex justify-between items-center gap-4 mb-2">
-                        <span className="text-xs text-gray-500">
-                            Owned by {ownerName}
+                <div className="mt-auto pt-3 border-t border-gray-300">
+                    <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                            <div className="w-5 h-5 rounded-full bg-purple-200 flex items-center justify-center text-xs text-purple-800 font-medium overflow-hidden">
+                                {ownerName.charAt(0).toUpperCase()}
+                            </div>
+                            <span>by {ownerName}</span>
                         </span>
+                        
+                        {/* Original upvote button style preserved */}
                         <button
                             onClick={handleUpvote}
                             disabled={isOwner || isUpvoting}
@@ -188,13 +205,11 @@ const ProductItem = ({ product }) => {
                             <FaCircleChevronUp />
                             {currentUpvotes}
                         </button>
-
                     </div>
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default ProductItem;
