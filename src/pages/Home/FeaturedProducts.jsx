@@ -35,7 +35,7 @@ const FeaturedProducts = () => {
 
     return (
         <div>
-            <div className="text-center mb-12">
+            <div className="text-center my-12">
                 <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">
                     Featured
                 </h4>

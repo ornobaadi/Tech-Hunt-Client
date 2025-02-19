@@ -51,7 +51,7 @@ const FAQ = () => {
     ];
 
     return (
-        <section className="py-20">
+        <section className="py-10">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                 <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">FAQ</h4>

@@ -32,7 +32,7 @@ const Testimonials = () => {
     };
 
     return (
-        <section className="py-20 bg-base-200 overflow-hidden">
+        <section className="py-10 bg-base-200 overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                 <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Testimonials</h4>
