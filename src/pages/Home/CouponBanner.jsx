@@ -103,7 +103,7 @@ const CouponsPage = () => {
                 </div>
 
                 <div className="text-center mt-10">
-                    <Link to="/dashboard/subscriptions" className="btn bg-purple-500 text-white btn-lg">
+                    <Link to="/coupons" className="btn bg-purple-500 text-white btn-lg">
                         View All Subscription Plans
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14"></path>

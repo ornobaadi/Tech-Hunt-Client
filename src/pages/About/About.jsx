@@ -1,35 +1,9 @@
 import { motion } from "framer-motion";
+import { Github, Linkedin } from "lucide-react";
 
 const About = () => {
   return (
     <div className="bg-gray-50">
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-100 to-indigo-100 overflow-hidden relative">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="container mx-auto px-4 text-center relative z-10"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-            About Our Platform
-          </h1>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
-            We connect innovators with early adopters, making technology discovery accessible to everyone.
-          </p>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:bg-blue-700 transition-all"
-          >
-            Join Our Community
-          </motion.button>
-        </motion.div>
-        
-        {/* Abstract shapes in background */}
-        <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
-        <div className="absolute top-20 -right-16 w-80 h-80 bg-indigo-200 rounded-full opacity-30 blur-3xl"></div>
-      </section>
 
       {/* Mission Section */}
       <section className="py-24">
@@ -48,9 +22,7 @@ const About = () => {
               transition={{ duration: 0.7 }}
               className="md:w-1/2"
             >
-              <div className="inline-block mb-3 px-4 py-1 bg-blue-100 text-blue-800 rounded-full font-medium text-sm">
-                Our Purpose
-              </div>
+              <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Purpose</h4>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Mission</h2>
               <p className="text-gray-700 mb-6 leading-relaxed">
                 We believe great products should be discovered based on merit, not marketing budgets. Our platform creates a space where innovation thrives regardless of resources.
@@ -98,7 +70,7 @@ const About = () => {
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl opacity-20 blur-xl"></div>
                 <img
-                  src="/api/placeholder/500/300"
+                  src="https://imageio.forbes.com/specials-images/imageserve/66fcdc589e002dcb85799ece/Discover-how-Hybrid-AI-is-revolutionizing-industries-by-combining-the-strengths-of/960x0.jpg?format=jpg&width=960"
                   alt="Our mission illustration"
                   className="rounded-xl shadow-xl relative"
                 />
@@ -115,15 +87,7 @@ const About = () => {
       <section className="py-24 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="inline-block mb-3 px-4 py-1 bg-indigo-100 text-indigo-800 rounded-full font-medium text-sm"
-            >
-              Our Experts
-            </motion.div>
+          <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">Our Experts</h4>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -146,24 +110,24 @@ const About = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <TeamMember
-              name="Alex Rivera"
+              name="Ornob Aadi"
               role="Founder & CEO"
-              image="/api/placeholder/200/200"
+              image="https://i.ibb.co.com/HNkhYGc/00000-PORTRAIT-00000-BURST20190124113738260-2.jpg"
             />
             <TeamMember
-              name="Mei Zhang"
+              name="Abu Jafar"
               role="CTO"
-              image="/api/placeholder/200/200"
+              image="https://i.ibb.co.com/dJr1vX1r/IMG-20220709-023311-731.jpg"
             />
             <TeamMember
-              name="Jay Patel"
+              name="Md. Fajlay Rabby"
               role="Head of Community"
-              image="/api/placeholder/200/200"
+              image="https://i.ibb.co.com/1XttHs2/IMG-20220107-150344-2.jpg"
             />
             <TeamMember
-              name="Sophia Chen"
-              role="Product Design"
-              image="/api/placeholder/200/200"
+              name="Krypto"
+              role="Product Designer"
+              image="https://i.ibb.co.com/f8yV6G3/IMG-20220315-162332-2.jpg"
             />
           </div>
         </div>
@@ -184,9 +148,7 @@ const ValuesGrid = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <div className="inline-block mb-3 px-4 py-1 bg-purple-100 text-purple-800 rounded-full font-medium text-sm">
-            What We Stand For
-          </div>
+          <h4 className="btn pointer-events-none text-purple-500 uppercase text-sm font-bold my-5">What we stand for</h4>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Core Values</h2>
           <p className="text-base-content/70 max-w-3xl mx-auto text-gray-600">
             The principles that guide our platform, community, and team.
@@ -287,20 +249,7 @@ const TeamMember = ({ name, role, image }) => {
       </div>
       <h3 className="text-xl font-semibold mb-1">{name}</h3>
       <p className="text-gray-600 mb-3">{role}</p>
-      <div className="flex justify-center space-x-3">
-        <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-blue-100 transition-colors cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-            <rect x="2" y="9" width="4" height="12"></rect>
-            <circle cx="4" cy="4" r="2"></circle>
-          </svg>
-        </span>
-        <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-blue-100 transition-colors cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
-            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-          </svg>
-        </span>
-      </div>
+      
     </motion.div>
   );
 };
