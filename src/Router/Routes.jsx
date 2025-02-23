@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'coupons',
-                element: <Coupons></Coupons>,
+                element: <PrivateRoute><Coupons></Coupons></PrivateRoute>,
             },
             {
                 path: 'about',
