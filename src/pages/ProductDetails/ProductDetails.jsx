@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaCircleChevronUp, FaClock, FaRegComment } from "react-icons/fa6";
+import { FiExternalLink, FiShare2, FiFlag } from "react-icons/fi";
 import ReactStars from 'react-awesome-stars-rating';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import useUpvote from '../../hooks/useUpvote';
 import useProducts from '../../hooks/useProducts';
 import Swal from 'sweetalert2';
-import { GrShare } from "react-icons/gr";
 import { Helmet } from 'react-helmet-async';
 
 const ProductDetails = () => {
@@ -15,7 +15,7 @@ const ProductDetails = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [upvote, refetch] = useUpvote();
-    const [, refetchProducts] = useProducts();
+    const [products, refetchProducts] = useProducts();
     const [product, setProduct] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [rating, setRating] = useState(0);
@@ -23,6 +23,7 @@ const ProductDetails = () => {
     const [loading, setLoading] = useState(true);
     const [currentUpvotes, setCurrentUpvotes] = useState(0);
     const [isUpvoting, setIsUpvoting] = useState(false);
+    const [similarProducts, setSimilarProducts] = useState([]);
 
     // Fetch product details
     useEffect(() => {
@@ -54,6 +55,19 @@ const ProductDetails = () => {
 
         fetchReviews();
     }, [id, axiosSecure]);
+
+    // Find similar products based on tags
+    useEffect(() => {
+        if (product && products.length > 0) {
+            const similar = products
+                .filter(p =>
+                    p._id !== id &&
+                    p.tags.some(tag => product.tags.includes(tag))
+                )
+                .slice(0, 4);
+            setSimilarProducts(similar);
+        }
+    }, [product, products, id]);
 
     const hasUpvoted = upvote.some(item => item.productId === id);
     const isOwner = user?.email === product?.ownerEmail;
@@ -113,9 +127,7 @@ const ProductDetails = () => {
         return date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            day: 'numeric'
         });
     };
 
@@ -132,7 +144,7 @@ const ProductDetails = () => {
                     }
                 },
                 showCancelButton: true,
-                confirmButtonColor: '#7e22ce',
+                confirmButtonColor: 'var(--bg-accent)',
                 cancelButtonColor: '#d1d5db',
                 confirmButtonText: 'Submit Report'
             });
@@ -201,20 +213,31 @@ const ProductDetails = () => {
         }
     };
 
+    const handleShare = () => {
+        navigator.clipboard.writeText(window.location.href);
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Link copied to clipboard!",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    };
+
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="w-12 h-12 border-4 border-t-purple-600 border-gray-200 rounded-full animate-spin"></div>
+            <div className="flex justify-center items-center min-h-screen custom-bg-primary">
+                <div className="w-12 h-12 border-2 border-t-transparent border-[var(--bg-accent)] rounded-full animate-spin"></div>
             </div>
         );
     }
 
     if (!product) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                <h2 className="text-2xl font-bold text-gray-800">Product Not Found</h2>
-                <p className="text-gray-600 mt-2">The product you're looking for doesn't exist or has been removed.</p>
-                <Link to="/" className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            <div className="flex flex-col items-center justify-center min-h-[50vh] custom-bg-primary custom-text-primary">
+                <h2 className="chakra text-xl font-bold">Product Not Found</h2>
+                <p className="custom-text-secondary mt-2">The product you're looking for doesn't exist or has been removed.</p>
+                <Link to="/" className="mt-4 px-4 py-2 custom-bg-accent text-white rounded-md hover:opacity-90 transition-opacity">
                     Back to Home
                 </Link>
             </div>
@@ -222,190 +245,179 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="custom-bg-primary min-h-screen py-12 font-inter">
             <Helmet>
                 <title>{product.productName} | Tech Hunt</title>
             </Helmet>
-            
-            {/* Product Details Section */}
-            <div className="mb-8 rounded-xl border border-base-300 shadow-md overflow-hidden">
-                <div className="p-6 md:p-8">
-                    <div className="flex flex-col md:flex-row gap-8">
-                        <div className="flex-shrink-0">
-                            <div className="relative overflow-hidden rounded-lg">
+
+            <div className="container mx-auto px-4 max-w-5xl">
+                {/* Main Product Section */}
+                <div className="custom-bg-secondary rounded-xl shadow-lg p-6 mb-8">
+                    <div className="flex flex-col gap-3">
+                        {/* Product Header */}
+                        <div className="flex flex-col sm:flex-row gap-6">
+                            <div className="w-full sm:w-1/3">
                                 <img
                                     src={product.productImage}
                                     alt={product.productName}
-                                    className="w-full md:w-64 md:h-64 object-cover transition-transform duration-500 hover:scale-105"
+                                    className="w-full h-48 object-contain rounded-lg"
                                 />
                             </div>
-                            
-                            
-                        </div>
-                        
-                        <div className="flex-1">
-                            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-5">
-                                <h1 className="text-2xl md:text-3xl font-bold">{product.productName}</h1>
-                                
-                                <div className="flex gap-3 self-start">
-                                    <a
-                                        href={product.externalLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                                    >
-                                        Visit Website <GrShare className="text-white" />
-                                    </a>
+                            <div className="flex-1">
+                                <h1 className="chakra text-3xl font-bold custom-text-primary mb-3">{product.productName}</h1>
+                                <p className="custom-text-secondary mb-4 leading-relaxed">{product.description}</p>
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                    {product.tags.map((tag, index) => (
+                                        <span
+                                            key={index}
+                                            className="px-2 py-1 text-xs font-medium rounded-full bg-[var(--bg-accent)]/10 custom-text-accent"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="flex items-center gap-2 text-sm custom-text-secondary mb-4">
+                                    <div className="w-6 h-6 rounded-full bg-[var(--bg-accent)]/20 flex items-center justify-center text-xs custom-text-accent font-medium">
+                                        {product.ownerName?.charAt(0).toUpperCase() || '?'}
+                                    </div>
+                                    <span>{product.ownerName}</span>
+                                    <span className="mx-2">•</span>
+                                    <FaClock className="custom-text-accent text-sm" />
+                                    <span>{product.timestamp ? formatDateTime(product.timestamp) : 'Date not available'}</span>
+                                </div>
+                                <div className=''>
                                     <button
-                                        onClick={handleReport}
-                                        className="btn btn-error bg-error/60 border border-gray-300 text-base-content rounded-lg"
+                                        onClick={handleUpvote}
+                                        disabled={isOwner || isUpvoting}
+                                        className={`flex items-center gap-2 px-6 py-3 rounded-lg shadow-md transition-all duration-300 
+                                    ${hasUpvoted
+                                                ? 'custom-bg-accent text-white'
+                                                : 'bg-[var(--bg-accent)]/5 custom-text-accent hover:custom-bg-accent hover:text-white'} 
+                                    ${isOwner ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
                                     >
-                                        Report
+                                        <FaCircleChevronUp className="text-xl" />
+                                        <span className="font-bold">{currentUpvotes}</span>
+                                        <span className="font-medium">{hasUpvoted ? 'Upvoted' : 'Upvote'}</span>
                                     </button>
                                 </div>
                             </div>
-                            
-                            <div className="flex flex-wrap gap-2 mb-5">
-                                {product.tags.map((tag, index) => (
-                                    <span
-                                        key={index}
-                                        className="px-3 py-1 text-sm font-medium rounded-full text-purple-700 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                            
-                            <p className="text-base-content mb-6 leading-relaxed">{product.description}</p>
-                            
-                            <div className="flex items-center gap-2 text-sm  mt-auto pt-4 border-t border-gray-100">
-                                <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center text-xs text-purple-800 font-medium overflow-hidden">
-                                    {product.ownerName?.charAt(0).toUpperCase() || '?'}
-                                </div>
-                                <span>by {product.ownerName}</span>
-                                
-                                <span className="mx-2">•</span>
-                                
-                                <FaClock className="text-purple-400" />
-                                <span>
-                                    Added on: {product.timestamp ?
-                                        formatDateTime(product.timestamp)
-                                        : 'Date not available'
-                                    }
-                                </span>
-                            </div>
-                            <div className="mt-6 flex justify-end">
-                                <button
-                                    onClick={handleUpvote}
-                                    disabled={isOwner || isUpvoting}
-                                    className={`btn btn-lg ${hasUpvoted ? 'btn-success' : 'btn-outline'} 
-                                             ${isOwner ? 'btn-disabled' : ''} 
-                                             flex items-center gap-2`}
-                                >
-                                    <FaCircleChevronUp />
-                                    {currentUpvotes}
-                                </button>
-                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap gap-3">
+                            <a
+                                href={product.externalLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-sm custom-bg-secondary custom-text-primary rounded-lg flex items-center gap-2 text-sm hover:bg-[var(--bg-accent)]/10"
+                            >
+                                <FiExternalLink size={14} /> Visit Website
+                            </a>
+                            <button
+                                onClick={handleShare}
+                                className="btn btn-sm custom-bg-secondary custom-text-primary rounded-lg flex items-center gap-2 text-sm hover:bg-[var(--bg-accent)]/10"
+                            >
+                                <FiShare2 size={14} className="custom-text-accent" /> Share
+                            </button>
+                            <button
+                                onClick={handleReport}
+                                className="btn btn-sm custom-bg-secondary text-red-500 rounded-lg flex items-center gap-2 text-sm hover:bg-red-50 dark:hover:bg-red-900/10"
+                            >
+                                <FiFlag size={14} /> Report
+                            </button>
+
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Post Review Section */}
-            <div className="mb-8 rounded-xl border border-base-300 shadow-md overflow-hidden">
-                <div className="px-6 py-4 border-b border-base-100">
-                    <h2 className="text-xl font-bold">Write a Review</h2>
-                </div>
-                
-                <div className="p-6">
-                    <form onSubmit={handleReviewSubmit} className="space-y-5">
-                        <div className="flex items-center gap-4">
-                            <img
-                                src={user.photoURL}
-                                alt={user.displayName}
-                                className="w-12 h-12 object-cover rounded-full border-2 border-purple-200"
-                            />
-                            <div>
-                                <p className="font-semibold text-base">{user.displayName}</p>
-                                <div className="mt-2">
+                {/* Reviews Section */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    {/* Write Review */}
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6">
+                        <h2 className="chakra text-xl font-bold custom-text-primary mb-4">Write a Review</h2>
+                        <form onSubmit={handleReviewSubmit} className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <img
+                                    src={user.photoURL}
+                                    alt={user.displayName}
+                                    className="w-10 h-10 object-cover rounded-full border border-[var(--bg-accent)]/30"
+                                />
+                                <div>
+                                    <p className="font-medium custom-text-primary text-sm">{user.displayName}</p>
                                     <ReactStars
                                         value={rating}
                                         onChange={value => setRating(value)}
-                                        size={24}
+                                        size={20}
                                         isHalf={true}
-                                        primaryColor="#7e22ce"
-                                        className="flex gap-1"
+                                        primaryColor="var(--bg-accent)"
+                                        className="flex gap-1 mt-1"
                                     />
                                 </div>
                             </div>
-                        </div>
-                        
-                        <textarea
-                            value={reviewText}
-                            onChange={(e) => setReviewText(e.target.value)}
-                            className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none transition-all resize-none"
-                            placeholder="Share your thoughts about this product..."
-                            required
-                        />
-                        
-                        <button
-                            type="submit"
-                            className="btn bg-purple-500 text-white"
-                        >
-                            Post Review
-                        </button>
-                    </form>
-                </div>
-            </div>
+                            <textarea
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                className="w-full h-24 p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all resize-none text-sm"
+                                placeholder="Share your thoughts about this product..."
+                                required
+                            />
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-2 custom-bg-accent text-white rounded-lg hover:opacity-90 text-sm"
+                            >
+                                Post Review
+                            </button>
+                        </form>
+                    </div>
 
-            {/* Reviews Section */}
-            <div className="rounded-xl border border-gray-300 shadow-md  overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-                    <FaRegComment className="text-purple-500" />
-                    <h2 className="text-xl font-bold">Customer Reviews</h2>
-                </div>
-                
-                <div className="p-6">
-                    <div className="grid grid-cols-1 gap-6">
-                        {reviews.length > 0 ? (
-                            reviews
-                            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-                            .map((review, index) => (
-                                <div 
-                                    key={index} 
-                                    className="p-5 rounded-lg bg-gray-50 border border-gray-100 hover:shadow-md transition-all duration-300"
-                                >
-                                    <div className="flex items-center gap-4 mb-4">
-                                        <img
-                                            src={review.reviewerImage}
-                                            alt={review.reviewerName}
-                                            className="w-12 h-12 rounded-full border-2 border-purple-200"
-                                        />
-                                        <div className="flex-1">
-                                            <div className="flex justify-between">
-                                                <h3 className="font-semibold text-gray-800">{review.reviewerName}</h3>
-                                                <span className="text-sm text-gray-500">
-                                                    {new Date(review.timestamp).toLocaleDateString()}
-                                                </span>
+                    {/* Reviews List */}
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <FaRegComment className="custom-text-accent" />
+                            <h2 className="chakra text-xl font-bold custom-text-primary">Customer Reviews</h2>
+                        </div>
+                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            {reviews.length > 0 ? (
+                                reviews
+                                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                                    .map((review, index) => (
+                                        <div
+                                            key={index}
+                                            className="p-4 rounded-lg custom-bg-primary border border-[var(--bg-accent)]/10"
+                                        >
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <img
+                                                    src={review.reviewerImage}
+                                                    alt={review.reviewerName}
+                                                    className="w-8 h-8 rounded-full border border-[var(--bg-accent)]/30"
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="flex justify-between">
+                                                        <h3 className="font-medium custom-text-primary text-sm">{review.reviewerName}</h3>
+                                                        <span className="text-xs custom-text-secondary">
+                                                            {new Date(review.timestamp).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                    <ReactStars
+                                                        value={review.rating}
+                                                        isEdit={false}
+                                                        size={14}
+                                                        isHalf={true}
+                                                        primaryColor="var(--bg-accent)"
+                                                        className="flex gap-1 mt-1"
+                                                    />
+                                                </div>
                                             </div>
-                                            <ReactStars
-                                                value={review.rating}
-                                                isEdit={false}
-                                                size={16}
-                                                isHalf={true}
-                                                primaryColor="#7e22ce"
-                                                className="flex gap-1 mt-1"
-                                            />
+                                            <p className="custom-text-secondary text-sm">{review.description}</p>
                                         </div>
-                                    </div>
-                                    <p className="text-gray-700 leading-relaxed">{review.description}</p>
+                                    ))
+                            ) : (
+                                <div className="text-center py-6 custom-text-secondary">
+                                    <FaRegComment className="text-2xl opacity-30 mx-auto mb-2" />
+                                    <p className="text-sm">No reviews yet. Be the first to share your thoughts!</p>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-center py-8 text-gray-500">
-                                Be the first to review this product!
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
