@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
-import { FaCircleChevronUp, FaUser } from "react-icons/fa6";
-import { IoIosAddCircle } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
+import { IoIosArrowDropupCircle } from "react-icons/io";
+import { AiFillPlusCircle } from "react-icons/ai";
 import { LuBox } from "react-icons/lu";
 import { NavLink, Outlet } from "react-router-dom";
 import useUpvote from "../hooks/useUpvote";
@@ -18,7 +19,7 @@ const Dashboard = () => {
     const [upvote] = useUpvote();
     const [isAdmin] = useAdmin();
     const [isModerator] = useModerator();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default to open
     const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
 
     useEffect(() => {
@@ -31,13 +32,26 @@ const Dashboard = () => {
     };
 
     const handleNavClick = () => {
-        setIsSidebarOpen(false);
+        // Only close sidebar on mobile
+        if (window.innerWidth < 768) {
+            setIsSidebarOpen(false);
+        }
+    };
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
     };
 
     const NavItem = ({ to, icon, children }) => (
         <li>
             <NavLink
-                className="flex gap-5 items-center"
+                className={({ isActive }) =>
+                    `flex gap-3 items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                        isActive
+                            ? "bg-[var(--bg-accent)]/80 text-gray-100" // Lighter purple and high-contrast text
+                            : "custom-text-primary hover:bg-[var(--bg-accent)]/10 hover:custom-text-accent"
+                    }`
+                }
                 to={to}
                 onClick={handleNavClick}
             >
@@ -48,112 +62,122 @@ const Dashboard = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Sidebar */}
+        <div className="min-h-screen custom-bg-primary font-inter">
             <div
-                className={`fixed top-0 left-0 transition-all duration-300 bg-gray-900 text-white w-80
-                    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 min-h-screen z-50 flex flex-col justify-between`}
+                className={`fixed top-0 left-0 transition-all duration-300 custom-bg-secondary custom-text-primary w-64
+                    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} min-h-screen z-50 flex flex-col justify-between border-r border-[var(--bg-accent)]/20`}
             >
                 <div>
-                    <div className="flex flex-col items-center mb-10">
-                        <img className="w-32 mt-4" src="/logo 2.png" alt="" />
-                        <p className="font-bold text-xl">Tech Hunt</p>
+                    <div className="flex flex-col items-center mb-10 pt-6">
+                        <img className="w-12" src="/logo 2.png" alt="Tech Hunt Logo" />
+                        <p className="chakra font-bold text-xl custom-text-primary mt-2">Tech Hunt</p>
                     </div>
-                    <ul className="menu px-5 w-full text-lg">
+                    <ul className="space-y-2 px-4">
                         {isAdmin ? (
                             <>
-                                <NavItem to="/dashboard/statistics" icon={<IoStatsChartSharp />}>
+                                <NavItem to="/dashboard/statistics" icon={<IoStatsChartSharp size={20} />}>
                                     Statistics
                                 </NavItem>
-                                <NavItem to="/dashboard/manageUsers" icon={<MdManageAccounts />}>
+                                <NavItem to="/dashboard/manageUsers" icon={<MdManageAccounts size={20} />}>
                                     Manage Users
                                 </NavItem>
-                                <NavItem to="/dashboard/manageCoupons" icon={<RiCoupon2Fill />}>
+                                <NavItem to="/dashboard/manageCoupons" icon={<RiCoupon2Fill size={20} />}>
                                     Manage Coupons
                                 </NavItem>
                             </>
                         ) : isModerator ? (
                             <>
-                                <NavItem to="/dashboard/reviewQueue" icon={<MdQueue />}>
+                                <NavItem to="/dashboard/reviewQueue" icon={<MdQueue size={20} />}>
                                     Product Review Queue
                                 </NavItem>
-                                <NavItem to="/dashboard/reportedProducts" icon={<MdReportProblem />}>
+                                <NavItem to="/dashboard/reportedProducts" icon={<MdReportProblem size={20} />}>
                                     Reported Products
                                 </NavItem>
                             </>
                         ) : (
                             <>
-                                <NavItem to="/dashboard/profile" icon={<FaUser />}>
+                                <NavItem to="/dashboard/profile" icon={<CgProfile size={20} />}>
                                     My Profile
                                 </NavItem>
-                                <NavItem to="/dashboard/upvotes" icon={<FaCircleChevronUp />}>
+                                <NavItem to="/dashboard/upvotes" icon={<IoIosArrowDropupCircle size={20} />}>
                                     My Upvotes ({upvote.length})
                                 </NavItem>
-                                <NavItem to="/dashboard/addProduct" icon={<IoIosAddCircle />}>
+                                <NavItem to="/dashboard/addProduct" icon={<AiFillPlusCircle size={20} />}>
                                     Add Product
                                 </NavItem>
-                                <NavItem to="/dashboard/myProducts" icon={<LuBox />}>
+                                <NavItem to="/dashboard/myProducts" icon={<LuBox size={20} />}>
                                     My Products
                                 </NavItem>
                             </>
                         )}
-                        <div className="divider"></div>
-                        <NavItem to="/" icon={<FaHome />}>
+                        <div className="divider my-4 mx-2 border-[var(--bg-accent)]/20"></div>
+                        <NavItem to="/" icon={<FaHome size={20} />}>
                             Home
                         </NavItem>
-                        <NavItem to="/products" icon={<GrTechnology />}>
+                        <NavItem to="/products" icon={<GrTechnology size={20} />}>
                             Products
                         </NavItem>
                     </ul>
                 </div>
 
-                {/* Theme Toggle at bottom of sidebar */}
                 <div className="px-6 pb-6 flex items-center gap-3">
-                    
-                    <label className="swap swap-rotate text-white">
-                        <input
-                            type="checkbox"
-                            checked={theme === "dark"}
-                            onChange={handleThemeChange}
-                        />
-                        <svg
-                            className="swap-off h-8 w-6 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
-                        </svg>
-                        <svg
-                            className="swap-on h-8 w-6 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
-                        </svg>
-                    </label>
-                    <span className="text-sm">Change Theme</span>
+                    <button
+                        onClick={handleThemeChange}
+                        className="p-2 rounded-full hover:bg-[var(--bg-accent)]/10 transition-colors"
+                        aria-label="Toggle theme"
+                    >
+                        {theme === "dark" ? (
+                            <svg
+                                className="w-5 h-5 custom-text-accent"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                        ) : (
+                            <svg
+                                className="w-5 h-5 custom-text-accent"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                            </svg>
+                        )}
+                    </button>
+                    <span className="text-sm custom-text-primary">Change Theme</span>
                 </div>
             </div>
 
-            {/* Mobile Toggle Button */}
             <button
-                className="text-white p-3 fixed top-4 left-4 z-50 bg-gray-800 rounded-md md:hidden"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="cursor-pointer custom-text-white p-3 fixed top-4 left-4 z-50 rounded-lg"
+                onClick={toggleSidebar}
             >
-                {isSidebarOpen ? <TbLayoutSidebarLeftCollapse /> : <TbLayoutSidebarRightCollapse />}
+                {isSidebarOpen ? (
+                    <TbLayoutSidebarLeftCollapse size={24} />
+                ) : (
+                    <TbLayoutSidebarRightCollapse size={24} />
+                )}
             </button>
 
-            {/* Glass Effect Overlay for mobile */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 backdrop-blur-sm bg-white/30 z-40 md:hidden"
+                    className="fixed inset-0 backdrop-blur-sm bg-[var(--bg-primary)]/30 z-40 md:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 ></div>
             )}
 
-            {/* Dashboard Content with max-width container */}
-            <div className="md:ml-80 bg-base-100 min-h-screen transition-all duration-300">
-                <div className="max-w-screen-xl mx-auto p-4 md:p-8">
+            <div
+                className={`min-h-screen transition-all duration-300 ${
+                    isSidebarOpen ? "md:ml-64" : "md:ml-0"
+                }`}
+            >
+                <div className="max-w-5xl mx-auto px-4 py-12">
                     <Outlet />
                 </div>
             </div>
