@@ -2,23 +2,26 @@ import { FaFacebookSquare, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="footer sm:footer-horizontal footer-center bg-base-200 p-5">
-            <aside>
-                <img className="w-32" src="/logo 2.png" alt="" />
-                <p className="font-bold text-xl">
-                    Tech Hunt
-                </p>
-                <p>Providing reliable tech since 2025</p>
-                <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
+        <footer className="custom-bg-primary p-8 font-inter">
+            <div className="container mx-auto max-w-5xl text-center">
+                <img className="w-8 mx-auto mb-2" src="/logo 2.png" alt="Tech Hunt Logo" />
+                <p className="chakra text-xl font-bold custom-text-primary mb-2">Tech Hunt</p>
+                <p className="custom-text-secondary mb-2">Providing reliable tech since 2025</p>
+                <p className="custom-text-secondary text-sm">Copyright © {new Date().getFullYear()} - All rights reserved</p>
                 <nav>
-                <div className="grid grid-flow-col my-4 gap-4 items-center *:text-2xl">
-                    <a href="https://www.facebook.com/ajm.fajlayrabby"><FaFacebookSquare /></a>
-                    <a href="https://www.linkedin.com/in/ornobaadi"><FaLinkedin /></a>
-                    <a href="https://github.com/ornobaadi"><FaGithub /></a>
-                </div>
-            </nav>
-            </aside>
-            
+                    <div className="flex justify-center gap-6 mt-4">
+                        <a href="https://www.facebook.com/ajm.fajlayrabby" className="custom-text-accent hover:opacity-80 transition-opacity">
+                            <FaFacebookSquare className="text-2xl" />
+                        </a>
+                        <a href="https://www.linkedin.com/in/ornobaadi" className="custom-text-accent hover:opacity-80 transition-opacity">
+                            <FaLinkedin className="text-2xl" />
+                        </a>
+                        <a href="https://github.com/ornobaadi" className="custom-text-accent hover:opacity-80 transition-opacity">
+                            <FaGithub className="text-2xl" />
+                        </a>
+                    </div>
+                </nav>
+            </div>
         </footer>
     );
 };

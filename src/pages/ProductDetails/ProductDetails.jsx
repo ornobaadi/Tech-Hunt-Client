@@ -289,7 +289,7 @@ const ProductDetails = () => {
                                     <button
                                         onClick={handleUpvote}
                                         disabled={isOwner || isUpvoting}
-                                        className={`flex items-center gap-2 px-6 py-3 rounded-lg shadow-md transition-all duration-300 
+                                        className={`flex items-center gap-2 btn btn-lg btn-outline rounded-lg shadow-md transition-all duration-300 
                                     ${hasUpvoted
                                                 ? 'custom-bg-accent text-white'
                                                 : 'bg-[var(--bg-accent)]/5 custom-text-accent hover:custom-bg-accent hover:text-white'} 
