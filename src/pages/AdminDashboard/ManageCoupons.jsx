@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Tag, Trash2, Plus, Edit2 } from 'lucide-react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { Helmet } from 'react-helmet-async';
+import Swal from 'sweetalert2';
 
 const ManageCoupons = () => {
     const [coupons, setCoupons] = useState([]);
@@ -38,12 +39,30 @@ const ManageCoupons = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.code || !formData.expiryDate || !formData.description || !formData.discountAmount) {
+            setError('All fields are required.');
+            return;
+        }
         try {
             setError(null);
             if (isEditing) {
                 await axiosSecure.patch(`/coupons/${formData._id}`, formData);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Coupon updated successfully!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             } else {
                 await axiosSecure.post('/coupons', formData);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Coupon added successfully!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
             await fetchCoupons();
             setIsAdding(false);
@@ -71,13 +90,32 @@ const ManageCoupons = () => {
         setIsAdding(true);
     };
 
-    const handleDelete = async (id) => {
-        try {
-            setError(null);
-            await axiosSecure.delete(`/coupons/${id}`);
-            await fetchCoupons();
-        } catch (error) {
-            setError('Failed to delete coupon. Please try again.');
+    const handleDelete = async (id, code) => {
+        const confirmResult = await Swal.fire({
+            title: 'Are you sure?',
+            text: `Delete coupon ${code}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--bg-accent)',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (confirmResult.isConfirmed) {
+            try {
+                setError(null);
+                await axiosSecure.delete(`/coupons/${id}`);
+                await fetchCoupons();
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: `${code} deleted successfully!`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } catch (error) {
+                setError('Failed to delete coupon. Please try again.');
+            }
         }
     };
 
@@ -87,79 +125,82 @@ const ManageCoupons = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-[60vh]">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
+            <div className="flex justify-center items-center min-h-screen custom-bg-primary">
+                <div className="w-12 h-12 border-2 border-t-transparent border-[var(--bg-accent)] rounded-full animate-spin"></div>
             </div>
         );
     }
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="custom-bg-primary min-h-screen py-12 font-inter">
             <Helmet>
                 <title>Manage Coupons | Tech Hunt</title>
             </Helmet>
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                <div className="space-y-1">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <div className="container mx-auto px-4 max-w-5xl">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-12">
+                    <h2 className="chakra text-3xl font-bold custom-text-primary">
                         Manage Coupons
                     </h2>
+                    <button
+                        onClick={() => {
+                            setIsAdding(true);
+                            setIsEditing(false);
+                            setFormData({
+                                code: '',
+                                expiryDate: '',
+                                description: '',
+                                discountAmount: ''
+                            });
+                        }}
+                        className="btn btn-sm custom-bg-accent text-white rounded-lg flex items-center gap-2 text-sm hover:opacity-90"
+                    >
+                        <Plus size={16} />
+                        Add New Coupon
+                    </button>
                 </div>
-                <button
-                    onClick={() => {
-                        setIsAdding(true);
-                        setIsEditing(false);
-                        setFormData({
-                            code: '',
-                            expiryDate: '',
-                            description: '',
-                            discountAmount: ''
-                        });
-                    }}
-                    className="btn btn-primary btn-sm"
-                >
-                    <Plus size={20} /> Add New Coupon
-                </button>
-            </div>
 
-            {/* Form */}
-            {isAdding && (
-                <div className="card bg-base-200 shadow-xl mb-8">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg font-semibold mb-4">
+                {isAdding && (
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-8 mb-8">
+                        <h3 className="chakra text-xl font-bold custom-text-primary mb-6">
                             {isEditing ? 'Edit Coupon' : 'Add New Coupon'}
                         </h3>
                         <form onSubmit={handleSubmit} className="space-y-6">
+                            {error && (
+                                <div className="text-red-500 text-sm mb-4">{error}</div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text font-medium">Coupon Code</span>
+                                    <label className="block text-sm font-medium custom-text-primary mb-1">
+                                        Coupon Code
+                                        <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                                     </label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="Enter coupon code"
-                                        className="input input-bordered focus:input-primary"
+                                        className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                         value={formData.code}
                                         onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                                     />
                                 </div>
                                 <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text font-medium">Expiry Date</span>
+                                    <label className="block text-sm font-medium custom-text-primary mb-1">
+                                        Expiry Date
+                                        <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                                     </label>
                                     <input
                                         type="date"
                                         required
                                         min={new Date().toISOString().split('T')[0]}
-                                        className="input input-bordered focus:input-primary"
+                                        className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                         value={formData.expiryDate}
                                         onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
                                     />
                                 </div>
                                 <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text font-medium">Discount Amount (%)</span>
+                                    <label className="block text-sm font-medium custom-text-primary mb-1">
+                                        Discount Amount (%)
+                                        <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                                     </label>
                                     <input
                                         type="number"
@@ -167,20 +208,21 @@ const ManageCoupons = () => {
                                         placeholder="Enter discount percentage"
                                         min="0"
                                         max="100"
-                                        className="input input-bordered focus:input-primary"
+                                        className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                         value={formData.discountAmount}
                                         onChange={(e) => setFormData({ ...formData, discountAmount: Math.min(100, Math.max(0, e.target.value)) })}
                                     />
                                 </div>
                                 <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text font-medium">Description</span>
+                                    <label className="block text-sm font-medium custom-text-primary mb-1">
+                                        Description
+                                        <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                                     </label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="Enter coupon description"
-                                        className="input input-bordered focus:input-primary"
+                                        className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     />
@@ -199,96 +241,91 @@ const ManageCoupons = () => {
                                             discountAmount: ''
                                         });
                                     }}
-                                    className="btn btn-ghost"
+                                    className="btn btn-sm custom-bg-secondary custom-text-primary rounded-lg text-sm hover:bg-[var(--bg-accent)]/10"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-sm custom-bg-accent text-white rounded-lg text-sm hover:opacity-90"
                                 >
                                     {isEditing ? 'Update Coupon' : 'Create Coupon'}
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Coupons Grid */}
-            {coupons.length === 0 ? (
-                <div className="text-center py-12 bg-base-200 rounded-lg">
-                    <Tag className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-xl opacity-70">No coupons available</p>
-                    <p className="text-sm opacity-50 mt-2">
-                        Start by creating your first coupon
-                    </p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    {coupons.map((coupon) => (
-                        <div key={coupon._id}
-                            className="relative bg-base-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
-                            {/* Header with Discount and Actions */}
-                            <div className="flex justify-between items-center bg-base-300 p-4">
-                                <div className="flex items-center gap-2">
-                                    <div className="p-2 rounded-lg">
-                                        <Tag className="h-5 w-5 text-primary" />
+                {coupons.length === 0 ? (
+                    <div className="text-center py-16 custom-text-secondary">
+                        <Tag className="h-16 w-16 mx-auto custom-text-accent opacity-30 mb-4" />
+                        <h3 className="chakra text-xl font-bold custom-text-primary">
+                            No Coupons Available
+                        </h3>
+                        <p className="mt-2 text-sm">
+                            Start by creating your first coupon!
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {coupons.map((coupon) => (
+                            <div
+                                key={coupon._id}
+                                className="custom-bg-secondary rounded-xl shadow-lg p-6 border border-[var(--bg-accent)]/10 hover:shadow-xl transition-shadow duration-300"
+                            >
+                                <div className="flex justify-between items-center mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Tag className="h-5 w-5 custom-text-accent" />
+                                        <h3 className="chakra font-mono text-lg font-bold custom-text-primary">
+                                            {coupon.code}
+                                        </h3>
                                     </div>
-                                    <h3 className="font-mono text-lg font-bold tracking-wide">
-                                        {coupon.code}
-                                    </h3>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleEdit(coupon)}
+                                            className="btn btn-sm custom-bg-accent text-white rounded-lg flex items-center gap-2 text-sm hover:opacity-90"
+                                            title="Edit coupon"
+                                        >
+                                            <Edit2 size={14} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(coupon._id, coupon.code)}
+                                            className="btn btn-sm text-red-500 rounded-lg flex items-center gap-2 text-sm hover:bg-red-50 dark:hover:bg-red-900/10"
+                                            title="Delete coupon"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="flex gap-1">
-                                    <button
-                                        onClick={() => handleEdit(coupon)}
-                                        className="btn btn-ghost btn-sm px-2 hover:bg-primary hover:text-white"
-                                        title="Edit coupon"
-                                    >
-                                        <Edit2 className="h-4 w-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(coupon._id)}
-                                        className="btn btn-ghost btn-sm px-2 hover:bg-error hover:text-white"
-                                        title="Delete coupon"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Main Content */}
-                            <div className="p-4">
-                                {/* Discount Badge */}
-                                <div className="inline-block bg-primary text-primary-content rounded-lg px-3 py-1 text-sm font-semibold mb-3">
+                                <div className="inline-block bg-[var(--bg-accent)]/10 text-[var(--text-accent)] rounded-lg px-3 py-1 text-sm font-semibold mb-3">
                                     {coupon.discountAmount}% OFF
                                 </div>
-
-                                {/* Description */}
-                                <p className="text-sm opacity-75 mb-4 line-clamp-2">
+                                <p className="text-sm custom-text-secondary mb-4 line-clamp-2">
                                     {coupon.description}
                                 </p>
-
-                                {/* Expiry Date */}
-                                <div className="flex items-center gap-2 text-sm opacity-70 mb-3">
+                                <div className="flex items-center gap-2 text-sm custom-text-secondary mb-3">
                                     <Calendar className="h-4 w-4" />
                                     <span>
                                         Expires: {new Date(coupon.expiryDate).toLocaleDateString()}
                                     </span>
                                 </div>
-
-                                {/* Status Bar */}
-                                <div className="flex justify-between items-center text-sm border-t border-base-300 pt-3">
-                                    <span className="opacity-70">Status</span>
-                                    <span className={`badge ${isExpired(coupon.expiryDate) ? 'badge-error' : 'badge-success'} badge-sm`}>
+                                <div className="flex justify-between items-center text-sm border-t border-[var(--bg-accent)]/20 pt-3">
+                                    <span className="custom-text-secondary">Status</span>
+                                    <span
+                                        className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                            isExpired(coupon.expiryDate)
+                                                ? 'bg-red-100 text-red-700'
+                                                : 'bg-green-100 text-green-700'
+                                        }`}
+                                    >
                                         {isExpired(coupon.expiryDate) ? 'Expired' : 'Active'}
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

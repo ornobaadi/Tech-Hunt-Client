@@ -35,86 +35,84 @@ const Statistics = () => {
     const rejectedProducts = products.filter(product => product.status === 'rejected').length;
 
     const pieData = [
-        { name: 'Accepted Products', value: acceptedProducts, color: '#4CAF50' },
-        { name: 'Pending Products', value: pendingProducts, color: '#FFC107' },
-        { name: 'Rejected Products', value: rejectedProducts, color: '#F44336' },
-        { name: 'Total Users', value: users.length, color: '#2196F3' },
-        { name: 'Total Reviews', value: reviews.length, color: '#9C27B0' }
+        { name: 'Accepted Products', value: acceptedProducts, color: '#34D399' }, // Green
+        { name: 'Pending Products', value: pendingProducts, color: '#FBBF24' }, // Yellow
+        { name: 'Rejected Products', value: rejectedProducts, color: '#F87171' }, // Red
+        { name: 'Total Users', value: users.length, color: '#60A5FA' }, // Blue
+        { name: 'Total Reviews', value: reviews.length, color: '#A78BFA' } // Purple
     ];
 
     return (
-        <div className="w-full p-6 space-y-8">
+        <div className="custom-bg-primary min-h-screen py-12 font-inter">
             <Helmet>
                 <title>Statistics | Tech Hunt</title>
             </Helmet>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Statistics Overview</h2>
+            <div className="container mx-auto px-4 max-w-5xl">
+                <h2 className="chakra text-3xl font-bold text-center mb-12 custom-text-primary">
+                    Statistics Overview
+                </h2>
 
-            <div className="bg-base-100 rounded-lg shadow p-6">
-                <div className="h-96">
-                    <ResponsiveContainer>
-                        <PieChart>
-                            <Pie
-                                data={pieData}
-                                cx="50%"
-                                cy="50%"
-                                label={({ name, value }) => `${name}: ${value}`}
-                                outerRadius={120}
-                                fill="#8884d8"
-                                dataKey="value"
-                            >
-                                {pieData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend layout="vertical" align="right" verticalAlign="middle" />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="stats bg-primary text-primary-content">
-                    <div className="stat">
-                        <div className="text-white">Total Products</div>
-                        <div className="stat-value">{products.length}</div>
+                <div className="custom-bg-secondary rounded-xl shadow-lg p-8 mb-8">
+                    <div className="h-96">
+                        <ResponsiveContainer>
+                            <PieChart>
+                                <Pie
+                                    data={pieData}
+                                    cx="50%"
+                                    cy="50%"
+                                    label={({ name, value }) => `${name}: ${value}`}
+                                    outerRadius={120}
+                                    dataKey="value"
+                                >
+                                    {pieData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: 'var(--bg-secondary)',
+                                        color: 'var(--text-primary)',
+                                        border: '1px solid var(--bg-accent)',
+                                        borderRadius: '8px'
+                                    }}
+                                />
+                                <Legend
+                                    layout="vertical"
+                                    align="right"
+                                    verticalAlign="middle"
+                                    formatter={(value) => (
+                                        <span className="custom-text-primary text-sm">{value}</span>
+                                    )}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
-                <div className="stats bg-secondary text-secondary-content">
-                    <div className="stat">
-                        <div className="text-white">Total Users</div>
-                        <div className="stat-value">{users.length}</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Total Products</h3>
+                        <p className="text-3xl font-semibold custom-text-accent">{products.length}</p>
                     </div>
-                </div>
-
-                <div className="stats bg-accent-content text-neutral-content">
-                    <div className="stat">
-                        <div className="text-white">Total Reviews</div>
-                        <div className="stat-value">{reviews.length}</div>
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Total Users</h3>
+                        <p className="text-3xl font-semibold custom-text-accent">{users.length}</p>
                     </div>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="stats bg-success text-success-content">
-                    <div className="stat">
-                        <div className="">Accepted Products</div>
-                        <div className="stat-value">{acceptedProducts}</div>
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Total Reviews</h3>
+                        <p className="text-3xl font-semibold custom-text-accent">{reviews.length}</p>
                     </div>
-                </div>
-
-                <div className="stats bg-warning text-warning-content">
-                    <div className="stat">
-                        <div className="">Pending Products</div>
-                        <div className="stat-value">{pendingProducts}</div>
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Accepted Products</h3>
+                        <p className="text-3xl font-semibold text-green-500">{acceptedProducts}</p>
                     </div>
-                </div>
-
-                <div className="stats bg-error text-error-content">
-                    <div className="stat">
-                        <div className="">Rejected Products</div>
-                        <div className="stat-value">{rejectedProducts}</div>
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Pending Products</h3>
+                        <p className="text-3xl font-semibold text-yellow-500">{pendingProducts}</p>
+                    </div>
+                    <div className="custom-bg-secondary rounded-xl shadow-lg p-6 text-center">
+                        <h3 className="chakra text-lg font-bold custom-text-primary mb-2">Rejected Products</h3>
+                        <p className="text-3xl font-semibold text-red-500">{rejectedProducts}</p>
                     </div>
                 </div>
             </div>
