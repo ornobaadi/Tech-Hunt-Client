@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Tag } from 'lucide-react';
-import useAuth from "../../hooks/useAuth"
+import useAuth from "../../hooks/useAuth";
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { Helmet } from 'react-helmet-async';
 
@@ -27,7 +27,6 @@ const AddProduct = () => {
         }
     });
 
-    // Check user's membership status
     useEffect(() => {
         const checkUserStatus = async () => {
             try {
@@ -73,7 +72,6 @@ const AddProduct = () => {
         try {
             setIsLoading(true);
 
-            // First upload the image to ImgBB
             const imageFile = { image: data.productImage[0] };
             const imgbbFormData = new FormData();
             imgbbFormData.append('image', data.productImage[0]);
@@ -99,7 +97,7 @@ const AddProduct = () => {
                 };
 
                 const productRes = await axiosPublic.post('/products', productItem);
-                
+
                 if (productRes.data.insertedId) {
                     reset();
                     setPreviewImage('');
@@ -124,6 +122,8 @@ const AddProduct = () => {
                     title: 'Product Limit Reached',
                     text: 'Free users can only add one product. Would you like to upgrade to premium?',
                     showCancelButton: true,
+                    confirmButtonColor: 'var(--bg-accent)',
+                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Upgrade Now',
                     cancelButtonText: 'Maybe Later'
                 }).then((result) => {
@@ -145,144 +145,128 @@ const AddProduct = () => {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4 md:p-6">
+        <div className="custom-bg-primary min-h-screen py-12 font-inter">
             <Helmet>
                 <title>Add Product | Tech Hunt</title>
             </Helmet>
-            <div className="card bg-base-100 shadow-xl">
-                <div className="card-body p-6 md:p-8">
-                    <h2 className="text-3xl font-bold text-center mb-5 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Add New Product</h2>
+            <div className="container mx-auto px-4 max-w-5xl">
+                <div className="custom-bg-secondary rounded-xl shadow-lg p-8">
+                    <h2 className="chakra text-3xl font-bold text-center mb-6 custom-text-primary">
+                        Add New Product
+                    </h2>
 
-                    {/* Membership Status Warning */}
                     {(!userStatus?.membershipStatus || userStatus.membershipStatus !== 'active') && (
-                        <div className="alert alert-warning shadow-lg mb-6">
-                            <div className="flex items-center gap-2">
-                                <Tag className="h-5 w-5" />
-                                <div>
-                                    <span className="font-medium">Free User Notice:</span> You can add only one product.
-                                    <button 
-                                        className="btn btn-link btn-sm"
-                                        onClick={() => navigate('/dashboard/payment')}
-                                    >
-                                        Upgrade to Premium
-                                    </button>
-                                </div>
+                        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-accent)]/10 custom-text-accent rounded-lg mb-6">
+                            <Tag className="h-5 w-5" />
+                            <div>
+                                <span className="font-medium">Free User Notice:</span> You can add only one product.
+                                <button
+                                    className="btn btn-link btn-sm custom-text-accent hover:custom-text-accent"
+                                    onClick={() => navigate('/dashboard/payment')}
+                                >
+                                    Upgrade to Premium
+                                </button>
                             </div>
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                        {/* Product Name */}
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium">Product Name</span>
-                                <span className="label-text-alt text-base-content/70">(Required)</span>
+                            <label className="block text-sm font-medium custom-text-primary mb-1">
+                                Product Name
+                                <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                             </label>
                             <input
                                 type="text"
                                 placeholder="Enter product name"
-                                className="input input-bordered w-full"
+                                className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                 {...register('productName', { required: true })}
                             />
                             {errors.productName && (
-                                <span className="text-error text-sm mt-1">Product name is required</span>
+                                <span className="text-red-500 text-sm mt-1">Product name is required</span>
                             )}
                         </div>
 
-                        {/* Product Image */}
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium">Product Image</span>
-                                <span className="label-text-alt text-base-content/70">(Required)</span>
+                            <label className="block text-sm font-medium custom-text-primary mb-1">
+                                Product Image
+                                <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                             </label>
                             <input
                                 type="file"
                                 accept="image/*"
-                                className="file-input file-input-bordered w-full"
+                                className="file-input file-input-bordered w-full custom-bg-primary custom-text-primary border-[var(--bg-accent)]/20 focus:border-[var(--bg-accent)]"
                                 {...register('productImage', { required: true })}
                                 onChange={handleImageChange}
                             />
                             {errors.productImage && (
-                                <span className="text-error text-sm mt-1">Product image is required</span>
+                                <span className="text-red-500 text-sm mt-1">Product image is required</span>
                             )}
                             {previewImage && (
                                 <div className="mt-4 flex justify-center">
-                                    <img 
-                                        src={previewImage} 
-                                        alt="Preview" 
-                                        className="w-40 h-40 object-cover rounded-lg shadow-md" 
+                                    <img
+                                        src={previewImage}
+                                        alt="Preview"
+                                        className="w-40 h-40 object-contain rounded-lg shadow-md"
                                     />
                                 </div>
                             )}
                         </div>
 
-                        {/* Description */}
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium">Description</span>
-                                <span className="label-text-alt text-base-content/70">(Required)</span>
+                            <label className="block text-sm font-medium custom-text-primary mb-1">
+                                Description
+                                <span className="custom-text-secondary text-xs ml-1">(Required)</span>
                             </label>
-                            <div className="relative">
-                                <textarea
-                                    required
-                                    className="textarea textarea-bordered min-h-[120px] w-full focus:bg-base-100 pr-4 text-base"
-                                    placeholder="Describe your product in detail..."
-                                    {...register('description')}
-                                />
-                            </div>
+                            <textarea
+                                required
+                                className="w-full h-32 p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all resize-none text-sm"
+                                placeholder="Describe your product in detail..."
+                                {...register('description')}
+                            />
                         </div>
 
-                        {/* Owner Info Section */}
-                        <div className="bg-gradient-to-r from-base-200 to-base-200/50 rounded-xl p-6 shadow-sm backdrop-blur-sm">
+                        <div className="custom-bg-primary rounded-xl p-6 border border-[var(--bg-accent)]/10">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                                 <div className="relative">
                                     {user?.photoURL ? (
-                                        <div className="avatar online">
-                                            <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-md">
-                                                <img src={user.photoURL} alt="Owner" className="object-cover" />
-                                            </div>
-                                        </div>
+                                        <img
+                                            src={user.photoURL}
+                                            alt="Owner"
+                                            className="w-20 h-20 rounded-full object-cover border-2 border-[var(--bg-accent)]/30 shadow-md"
+                                        />
                                     ) : (
-                                        <div className="avatar placeholder">
-                                            <div className="w-20 rounded-full bg-neutral-focus text-neutral-content ring ring-primary ring-offset-base-100 ring-offset-2">
-                                                <span className="text-2xl">{user?.displayName?.charAt(0) || 'U'}</span>
-                                            </div>
+                                        <div className="w-20 h-20 rounded-full bg-[var(--bg-accent)]/10 flex items-center justify-center text-2xl custom-text-accent font-medium">
+                                            {user?.displayName?.charAt(0).toUpperCase() || 'U'}
                                         </div>
                                     )}
-                                    <div className="badge badge-primary badge-sm absolute -top-2 right-0">Owner</div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-xl font-semibold">{user?.displayName}</h3>
-                                        {/* <div className="badge badge-ghost badge-sm">Verified</div> */}
+                                    <div className="badge badge-sm absolute -top-2 right-0 bg-[var(--bg-accent)] text-white">
+                                        Owner
                                     </div>
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex items-center gap-2 text-base-content/70">
-                                            Email:
-                                            <span>{user?.email}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-base-content/70">
-
-                                            <span className="text-sm">Product Owner</span>
-                                        </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <h3 className="chakra text-xl font-bold custom-text-primary">
+                                        {user?.displayName}
+                                    </h3>
+                                    <div className="flex flex-col gap-1 text-sm custom-text-secondary">
+                                        <span>Email: {user?.email}</span>
+                                        <span>Product Owner</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Tags */}
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium">Tags</span>
+                            <label className="block text-sm font-medium custom-text-primary mb-1">
+                                Tags
                             </label>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 items-center">
                                 <input
                                     type="text"
                                     value={currentTag}
                                     onChange={(e) => setCurrentTag(e.target.value)}
                                     placeholder="Add tags..."
-                                    className="input input-bordered flex-1"
+                                    className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                     onKeyPress={(e) => {
                                         if (e.key === 'Enter') {
                                             e.preventDefault();
@@ -292,7 +276,7 @@ const AddProduct = () => {
                                 />
                                 <button
                                     type="button"
-                                    className="btn bg-purple-500 text-white"
+                                    className="btn custom-bg-accent text-white rounded-lg text-sm hover:opacity-90"
                                     onClick={handleAddTag}
                                 >
                                     Add Tag
@@ -300,11 +284,14 @@ const AddProduct = () => {
                             </div>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {tags.map((tag, index) => (
-                                    <div key={index} className="badge badge-primary gap-2">
+                                    <div
+                                        key={index}
+                                        className="px-2 py-1 text-xs font-medium rounded-full bg-[var(--bg-accent)]/10 custom-text-accent flex items-center gap-1"
+                                    >
                                         {tag}
                                         <button
                                             type="button"
-                                            className="btn btn-ghost btn-xs"
+                                            className="text-xs hover:text-red-500"
                                             onClick={() => handleRemoveTag(tag)}
                                         >
                                             ×
@@ -314,16 +301,15 @@ const AddProduct = () => {
                             </div>
                         </div>
 
-                        {/* External Link */}
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium">External Link</span>
-                                <span className="label-text-alt text-base-content/70">(Optional)</span>
+                            <label className="block text-sm font-medium custom-text-primary mb-1">
+                                External Link
+                                <span className="custom-text-secondary text-xs ml-1">(Optional)</span>
                             </label>
                             <input
                                 type="url"
                                 placeholder="https://example.com"
-                                className="input input-bordered w-full"
+                                className="w-full p-3 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none transition-all text-sm"
                                 {...register('externalLink', {
                                     pattern: {
                                         value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
@@ -332,14 +318,13 @@ const AddProduct = () => {
                                 })}
                             />
                             {errors.externalLink && (
-                                <span className="text-error text-sm mt-1">{errors.externalLink.message}</span>
+                                <span className="text-red-500 text-sm mt-1">{errors.externalLink.message}</span>
                             )}
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
-                            className="btn btn-primary w-full"
+                            className="btn btn-lg custom-bg-accent text-white rounded-lg w-full hover:opacity-90 text-sm"
                             disabled={isLoading}
                         >
                             {isLoading ? (
