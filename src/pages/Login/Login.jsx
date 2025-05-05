@@ -2,131 +2,162 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SocialLogin from "../../components/SocialLogin/SocialLogin";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MySwal = withReactContent(Swal);
 
 const Login = () => {
     const { signIn } = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure();
     const [showPassword, setShowPassword] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
-    console.log('state in the location', location.state);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
 
-        signIn(email, password)
-            .then((result) => {
-                const user = result.user;
-                MySwal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "success",
-                    title: "Login successful!",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                });
-                navigate(from, {replace: true});
-                console.log(user);
-            })
-            .catch((error) => {
-                let errorMessage = "Failed to login. Please try again.";
+        try {
+            const result = await signIn(email, password);
+            const user = result.user;
 
-                if (error.code === "auth/invalid-credential") {
-                    errorMessage = "Email or Password incorrect. Please check and try again.";
-                } else if (error.code === "auth/too-many-requests") {
-                    errorMessage = "Too many login attempts. Please try again later.";
+            // Handle pending upvote
+            const pendingUpvote = localStorage.getItem('pendingUpvote');
+            if (pendingUpvote) {
+                try {
+                    const productRes = await axiosSecure.get(`/product/${pendingUpvote}`);
+                    const product = productRes.data;
+                    const upvoteItem = {
+                        productId: pendingUpvote,
+                        email: user.email,
+                        productName: product.productName,
+                        productImage: product.productImage,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    const postRes = await axiosSecure.post('/upvotes', upvoteItem);
+                    if (postRes.status === 200 || postRes.status === 201 || postRes.data.insertedId) {
+                        await axiosSecure.patch(`/products/${pendingUpvote}/upvote`, { action: 'increment' });
+                        MySwal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: `${product.productName} upvoted`,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                    localStorage.removeItem('pendingUpvote');
+                } catch (upvoteError) {
+                    console.error('Error processing pending upvote:', upvoteError);
+                    MySwal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Failed to process pending upvote",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }
+            }
 
-                MySwal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: errorMessage,
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                });
-
-                console.error(error);
+            MySwal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Login successful!",
+                showConfirmButton: false,
+                timer: 1500
             });
+            navigate(from, { replace: true });
+        } catch (error) {
+            let errorMessage = "Failed to login. Please try again.";
+            if (error.code === "auth/invalid-credential") {
+                errorMessage = "Email or password incorrect.";
+            } else if (error.code === "auth/too-many-requests") {
+                errorMessage = "Too many attempts. Try again later.";
+            }
+
+            MySwal.fire({
+                position: "top-end",
+                icon: "error",
+                title: errorMessage,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            console.error('Login error:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div>
+        <div className="custom-bg-primary min-h-screen flex items-center justify-center py-12 font-inter">
             <Helmet>
                 <title>Login | Tech Hunt</title>
             </Helmet>
-            <div className="hero bg-base-100 min-h-screen">
-                <div className="hero-content flex-col w-full max-w-md">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-5xl font-bold pb-10">Login now!</h1>
-                        
-                    </div>
-                    <div className="card bg-base-100 w-full shrink-0 shadow-2xl">
-                        <form onSubmit={handleLogin} className="card-body">
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Email</span>
-                                </label>
+            <div className="container mx-auto px-4 max-w-md">
+                <div className="custom-bg-secondary rounded-xl shadow-lg p-8">
+                    <h1 className="chakra text-3xl font-bold custom-text-primary text-center mb-8">Login</h1>
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-sm custom-text-primary font-medium">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                className="w-full px-4 py-2 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none text-sm"
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm custom-text-primary font-medium">Password</label>
+                            <div className="relative">
                                 <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="email"
-                                    className="input input-bordered  w-full"
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    className="w-full px-4 py-2 custom-bg-primary custom-text-primary border border-[var(--bg-accent)]/20 rounded-lg focus:border-[var(--bg-accent)] outline-none text-sm"
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-[var(--bg-accent)]"
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Password</span>
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        placeholder="password"
-                                        className="input input-bordered w-full"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-xl"
-                                    >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
-                                </div>
-                                <label className="label">
-                                    <a href="#" className="label-text-alt link link-hover">
-                                        Forgot password?
-                                    </a>
-                                </label>
-                            </div>
-                            <div className="form-control mt-6">
-                                <input className="btn w-full bg-purple-700 text-white" type="submit" value="Login" />
-                            </div>
-                        </form>
-                        <div className="flex justify-center mb-5">
-                            <h2>
-                                New here? &nbsp;
-                                <Link className="hover:underline" to="/signup">
-                                    Create an Account
-                                </Link>
-                            </h2>
+                            <Link to="#" className="text-xs custom-text-accent hover:underline">Forgot password?</Link>
                         </div>
-                        <SocialLogin></SocialLogin>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full px-4 py-2 custom-bg-accent text-white rounded-lg hover:opacity-90 flex items-center justify-center gap-2 text-sm disabled:opacity-50 tooltip tooltip-bottom"
+                            data-tip="Log in to your account"
+                        >
+                            {isLoading ? (
+                                <Loader2 size={16} className="animate-spin" />
+                            ) : (
+                                "Login"
+                            )}
+                        </button>
+                    </form>
+                    <div className="text-center mt-6">
+                        <p className="text-sm custom-text-secondary">
+                            New here?{" "}
+                            <Link to="/signup" className="custom-text-accent hover:underline">
+                                Create an Account
+                            </Link>
+                        </p>
                     </div>
+                    <SocialLogin />
                 </div>
             </div>
         </div>

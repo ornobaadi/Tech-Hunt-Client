@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaCircleChevronUp, FaClock } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa6";
 import { FiExternalLink } from "react-icons/fi";
+import { Loader2, ChevronUpCircle } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useUpvote from "../../hooks/useUpvote";
@@ -16,7 +17,8 @@ const ProductItem = ({ product }) => {
     const axiosSecure = useAxiosSecure();
     const [upvote, refetch] = useUpvote();
     const [, refetchProducts] = useProducts();
-    const [currentUpvotes, setCurrentUpvotes] = useState(product.upvote || 0);
+    // Fix: Use product.upvotes for consistency with backend and original code
+    const [currentUpvotes, setCurrentUpvotes] = useState(product.upvotes || 0);
     const [isUpvoted, setIsUpvoted] = useState(false);
     const [isUpvoting, setIsUpvoting] = useState(false);
 
@@ -176,13 +178,18 @@ const ProductItem = ({ product }) => {
                 <button
                     onClick={handleUpvote}
                     disabled={isOwner || isUpvoting}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 text-sm font-inter
                         ${isUpvoted 
                             ? 'custom-bg-accent text-white' 
                             : 'bg-[var(--bg-accent)]/10 custom-text-accent hover:custom-bg-accent hover:text-white'} 
-                        ${isOwner ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
+                        ${isOwner ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'} tooltip tooltip-bottom`}
+                    data-tip={isOwner ? "Cannot upvote your own product" : isUpvoted ? "Remove upvote" : "Upvote product"}
                 >
-                    <FaCircleChevronUp className="text-lg" />
+                    {isUpvoting ? (
+                        <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                        <ChevronUpCircle size={16} />
+                    )}
                     <span className="font-bold">{currentUpvotes}</span>
                 </button>
             </div>

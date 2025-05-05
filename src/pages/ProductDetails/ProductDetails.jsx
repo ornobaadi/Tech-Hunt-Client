@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaCircleChevronUp, FaClock, FaRegComment } from "react-icons/fa6";
 import { FiExternalLink, FiShare2, FiFlag } from "react-icons/fi";
+import { Loader2 } from "lucide-react"; // Import Loader2 from lucide-react
 import ReactStars from 'react-awesome-stars-rating';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
@@ -295,7 +296,11 @@ const ProductDetails = () => {
                                                 : 'bg-[var(--bg-accent)]/5 custom-text-accent hover:custom-bg-accent hover:text-white'} 
                                     ${isOwner ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
                                     >
-                                        <FaCircleChevronUp className="text-xl" />
+                                        {isUpvoting ? (
+                                            <Loader2 size={18} className="animate-spin" />
+                                        ) : (
+                                            <FaCircleChevronUp className="text-xl" />
+                                        )}
                                         <span className="font-bold">{currentUpvotes}</span>
                                         <span className="font-medium">{hasUpvoted ? 'Upvoted' : 'Upvote'}</span>
                                     </button>
